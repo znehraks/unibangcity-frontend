@@ -1,0 +1,81 @@
+/* Dots */
+.carousel-dots {
+  top: 0;
+}
+
+.carousel-dots li {
+  position: relative;
+
+  display: inline-block;
+
+  width: 1vw;
+  height: 1vh;
+  margin: 0 0.5vw;
+  padding: 0 0.8vw;
+
+  cursor: pointer;
+}
+
+.carousel-dots li button {
+  font-size: 0;
+  line-height: 0;
+
+  display: block;
+
+  width: 20px;
+  height: 20px;
+  padding: 5px;
+
+  cursor: pointer;
+
+  color: transparent;
+  border: 0;
+  outline: none;
+  background: transparent;
+}
+@media screen and (max-width: 500px) {
+  .carousel-dots li {
+    margin: 0 2vw;
+  }
+}
+
+.carousel-dots li button:hover,
+.carousel-dots li button:focus {
+  outline: none;
+}
+
+.carousel-dots li button:hover:before,
+.carousel-dots li button:focus:before {
+  opacity: 1;
+}
+
+.carousel-dots li button:before {
+  font-family: "slick";
+  font-size: 40px;
+  line-height: 20px;
+
+  position: absolute;
+  top: 0;
+  left: 0;
+
+  width: 20px;
+  height: 20px;
+
+  content: "•";
+  text-align: center;
+
+  opacity: 0.25;
+  color: black;
+
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.carousel-dots li.carousel-dots-active button:before {
+  opacity: 0.75;
+  color: black;
+}
+
+.Carousel .carousel-initialized.scrolling .CustomArrow {
+  display: none;
+}
