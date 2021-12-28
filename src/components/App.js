@@ -1,26 +1,30 @@
 import React from "react";
-import { HashRouter as Router } from "react-router-dom";
+import { BrowserRouter } from "react-router-dom";
 import styled, { ThemeProvider } from "styled-components";
 import Footer from "./Footer";
 import Header from "./Header";
-import Routes from "./Routes";
-import GlobalStyles from "./Styles/GlobalStyles";
-import Theme from "./Styles/Theme";
+import RouterComponent from "./RouterComponent";
+import GlobalStyle from "./styles/GlobalStyles";
+import Theme from "./styles/Theme";
 
-const Wrapper = styled.div``;
+const Wrapper = styled.div`
+  width: 100vw;
+  height: 100vh;
+  background: #fff;
+`;
 const App = () => {
   return (
     <ThemeProvider theme={Theme}>
-      <GlobalStyles />
-      <h1>디버깅 시작</h1>
-      {/* <Router>
-        <Wrapper>
+      <GlobalStyle />
+      <Wrapper>
+        <BrowserRouter>
           <Header />
-          <Routes />
+          <RouterComponent />
           <Footer />
-        </Wrapper>
-      </Router> */}
+        </BrowserRouter>
+      </Wrapper>
     </ThemeProvider>
   );
 };
+
 export default App;
