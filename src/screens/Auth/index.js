@@ -1,16 +1,7 @@
 import React from "react";
-import styled, { keyframes } from "styled-components";
-const TwinkleAnimation = keyframes`
-    0%{
-        opacity:0
-    }
-    50%{
-        opacity: 1;
-    }
-    100%{
-        opacity: 0;
-    }
-`;
+import styled from "styled-components";
+import { MainSubTitleLink } from "../../components/styles/StyledComponents";
+
 const MainContainer = styled.div`
   width: 100%;
   height: 80%;
@@ -37,17 +28,6 @@ const MainTitle = styled.div`
   justify-content: center;
   align-items: center;
   margin-bottom: 1vw;
-`;
-const MainSubTitle = styled.div`
-  width: 100%;
-  font-size: 1vw;
-  font-weight: 800;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  animation: ${TwinkleAnimation} 1.5s linear infinite;
-  cursor: pointer;
 `;
 const MainArticleContainer = styled.div`
   width: 100%;
@@ -80,7 +60,7 @@ const Auth = () => {
     <MainContainer>
       <MainTitleContainer>
         <MainTitle>AUTH</MainTitle>
-        <MainSubTitle>유니방시티 소개 보러가기</MainSubTitle>
+        <MainSubTitleLink>유니방시티 소개 보러가기</MainSubTitleLink>
       </MainTitleContainer>
       <MainArticleContainer>
         <MainArticle>학우들의 추천</MainArticle>

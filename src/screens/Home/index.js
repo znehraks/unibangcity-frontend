@@ -23,7 +23,7 @@ const MainContainer = styled.div`
 `;
 const MainTitleContainer = styled.div`
   width: 100%;
-  height: 30%;
+  height: 40%;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -52,11 +52,11 @@ const MainSubTitle = styled(Link)`
 `;
 const MainArticleContainer = styled.div`
   width: 100%;
-  height: 70%;
+  height: 60%;
   display: flex;
   flex-direction: row;
   justify-content: space-evenly;
-  align-items: center;
+  align-items: flex-start;
 `;
 const MainArticle = styled.div`
   width: 12vw;
