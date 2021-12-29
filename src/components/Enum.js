@@ -22,3 +22,9 @@ export const SUBWAY = "T2";
 export const COST = "T3";
 export const SAFETY = "T4";
 export const HOUSE = "T5";
+
+//ChartMode Name
+export const ALL = "ALL";
+export const BAR = "BAR";
+export const WORDCLOUD = "WORDCLOUD";
+export const PIE = "PIE";

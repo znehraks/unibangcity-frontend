@@ -14,6 +14,10 @@ import {
   SAFETY,
   HOUSE,
   RESULT,
+  ALL,
+  BAR,
+  WORDCLOUD,
+  PIE,
 } from "../../components/Enum";
 import useInput from "../../components/hooks/useInput";
 import {
@@ -35,10 +39,14 @@ import safety_red_img from "../../components/styles/images/safety_red.png";
 import house_red_img from "../../components/styles/images/house_red.png";
 import ArticleButton from "../../components/ArticleButton";
 import { Api } from "../../api";
-import preCalculate from "../../components/preCalulateFunc";
+import Map from "../../components/kakao/Map";
+import RadarArticle from "../../components/Visualization/RadarArticle";
+import WordcloudDetailItem from "../../components/Visualization/Detail/WordcloudDetailItem";
+import BarComponent from "../../components/Visualization/BarRoom";
+import PieComponent from "../../components/Visualization/PieRoom";
 const MainContainer = styled.div`
   width: 100%;
-  height: 80%;
+  height: ${(props) => (props.mode === RESULT ? `auto` : `80%`)};
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -156,6 +164,53 @@ const MainArticle = styled.div`
     color: #f7323f;
   }
 `;
+const ResultArticleContainer = styled.div`
+  width: 100%;
+  height: 90vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  padding-top: 2vw;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.5);
+`;
+const ResultTitleContainer = styled.div`
+  width: 100%;
+  height: 10%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+`;
+const ResultTitleSpan = styled.div`
+  font-size: 2vw;
+  margin-bottom: 0.6vw;
+  text-align: center;
+`;
+const ResultSubTitleSpan = styled.div`
+  font-size: 1vw;
+  margin-bottom: 1vw;
+  text-align: center;
+`;
+
+const ResultMainContainer = styled.div`
+  width: 100%;
+  height: 90%;
+  min-height: 95%;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+`;
+
+const ResultSubContainer = styled.div`
+  width: 30%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+`;
+
 const Recommendation = () => {
   const [mode, setMode] = useState(INTRO);
   const schoolNameInput = useInput("");
@@ -173,6 +228,110 @@ const Recommendation = () => {
     Q5Answer_kr: "",
   });
   const [data, setData] = useState([]);
+  const [aggregated, setAggregated] = useState([]);
+  const [currentAddress, setCurrentAddress] = useState("");
+  const [house, setHouse] = useState();
+  const [isClicked, setIsClicked] = useState("");
+  const [isHovered, setIsHovered] = useState("");
+  const [chartData, setChartData] = useState({
+    hashtags: [],
+    monthlyDeposit: [],
+    monthlyPay: [],
+    reservDeposit: [],
+    price: [],
+  });
+  const [isChecked, setIsChecked] = useState("monthReserv");
+
+  const [chartmode, setChartmode] = useState(ALL);
+  const getAggregated = () => {
+    //마커 레이더차트
+    let weight_names = ["거리", "역세권", "가성비", "안전", "매물"];
+    let newArr = [];
+    for (let i = 0; i < data.length; i++) {
+      let tempObj = {};
+      tempObj["weight"] = weight_names[i];
+      for (let j = 0; j < 5; j++) {
+        tempObj[`${j + 1}위`] = data[j][`T${i + 1}`];
+      }
+      tempObj[`평균`] = Math.round(data[0][`T${i + 1}_avg`]);
+      newArr.push(tempObj);
+    }
+    console.log(newArr);
+    setAggregated(newArr);
+  };
+
+  const getChartData = () => {
+    //해시태그 모음
+    const hashtagsTemp = [];
+
+    //월세보증금
+    const monthlyDepositTemp = [];
+
+    //월세
+    const monthlyPayTemp = [];
+
+    //전세
+    const reservDepositTemp = [];
+
+    //매매
+    const priceTemp = [];
+
+    for (let i = 0; i < data.length; i++) {
+      try {
+        for (let j = 0; j < data[i].rooms_hash_tags.length; j++) {
+          hashtagsTemp.push(data[i].rooms_hash_tags[j]);
+        }
+
+        for (let j = 0; j < data[i].rooms_desc.length; j++) {
+          hashtagsTemp.push(data[i].rooms_desc[j].split("|")[0].trim());
+
+          hashtagsTemp.push(data[i].rooms_desc2[j].split(",")[0].trim());
+
+          if (data[i].rooms_selling_type[j] === 0) {
+            if (data[i].rooms_price_title[j].includes("억")) {
+              monthlyDepositTemp.push(
+                Number(data[i].rooms_price_title[j].split("억")[0]) * 10000
+              );
+              monthlyPayTemp.push(
+                Number(data[i].rooms_price_title[j].split("억")[0]) * 10000
+              );
+            } else {
+              monthlyDepositTemp.push(
+                Number(data[i].rooms_price_title[j].split("/")[0])
+              );
+              monthlyPayTemp.push(
+                Number(data[i].rooms_price_title[j].split("/")[1])
+              );
+            }
+          } else if (data[i].rooms_selling_type[j] === 1) {
+            if (data[i].rooms_price_title[j].includes("억")) {
+              reservDepositTemp.push(
+                Number(data[i].rooms_price_title[j].split("억")[0]) * 10000
+              );
+            } else {
+              reservDepositTemp.push(Number(data[i].rooms_price_title[j]));
+            }
+          } else {
+            if (data[i].rooms_price_title[j].includes("억")) {
+              priceTemp.push(
+                Number(data[i].rooms_price_title[j].split("억")[0]) * 10000
+              );
+            } else {
+              priceTemp.push(Number(data[i].rooms_price_title[j]));
+            }
+          }
+        }
+      } catch (e) {}
+    }
+    setChartData({
+      hashtags: hashtagsTemp.sort(),
+      monthlyDeposit: monthlyDepositTemp,
+      monthlyPay: monthlyPayTemp,
+      reservDeposit: reservDepositTemp,
+      price: priceTemp,
+    });
+    console.log(chartData);
+  };
   useEffect(() => {
     if (
       answers.Q1Answer !== "" &&
@@ -191,16 +350,22 @@ const Recommendation = () => {
           parsed = JSON.parse(parsed);
           console.log(parsed);
           console.log(typeof parsed);
-          setMode(RESULT);
           setData(parsed);
         } else {
           alert(res.data.err_msg);
         }
       });
     }
-  }, [mode]);
+    if (data.length !== 0 && aggregated.length === 0) {
+      getAggregated();
+    }
+    if (data.length !== 0 && chartData.hashtags.length === 0) {
+      getChartData();
+    }
+    console.log(isClicked);
+  }, [mode, isHovered]);
   return (
-    <MainContainer>
+    <MainContainer mode={mode}>
       {mode !== RESULT && (
         <SelectedContainer>
           <SelectedSpan>{answers.Q1Answer}</SelectedSpan>+
@@ -657,7 +822,116 @@ const Recommendation = () => {
         </>
       )}
       {mode === RESULT && (
-        <>{data && data.map((item) => <h3>{item.rank}</h3>)}</>
+        <>
+          <ResultArticleContainer>
+            <ResultTitleContainer>
+              <ResultTitleSpan>
+                "{answers.Q1Answer}" 주변 추천 자취지역 Top5
+              </ResultTitleSpan>
+              <ResultSubTitleSpan>
+                마커에 마우스(손가락)를(을) 올리시면 해당 지역과 평균을 비교할
+                수 있습니다.
+              </ResultSubTitleSpan>
+            </ResultTitleContainer>
+            <ResultMainContainer>
+              <ResultSubContainer>
+                <ResultSubTitleSpan>
+                  마커를 클릭하면 해당 지역의 상세정보를 확인할 수 있습니다.
+                </ResultSubTitleSpan>
+                {data.length !== 0 && (
+                  <Map
+                    mobile={window.innerWidth <= 500}
+                    setHouse={setHouse}
+                    setCurrentAddress={setCurrentAddress}
+                    setIsHovered={setIsHovered}
+                    setIsClicked={setIsClicked}
+                    data={data}
+                    univ_lat={answers.univ_lat}
+                    univ_lon={answers.univ_lon}
+                  />
+                )}
+              </ResultSubContainer>
+              <ResultSubContainer>
+                <ResultSubTitleSpan>레이더차트</ResultSubTitleSpan>
+                {aggregated.length !== 0 && (
+                  <RadarArticle
+                    mobile={window.innerWidth <= 500}
+                    data={aggregated}
+                    isHovered={isHovered}
+                    isClicked={isClicked}
+                  />
+                )}
+              </ResultSubContainer>
+            </ResultMainContainer>
+          </ResultArticleContainer>
+          {isClicked &&
+            chartData.monthlyDeposit.length !== 0 &&
+            chartData.monthlyPay.length !== 0 &&
+            chartData.reservDeposit.length !== 0 && (
+              <ResultArticleContainer>
+                <ResultTitleContainer>
+                  <ResultTitleSpan>
+                    "{currentAddress ? `${currentAddress}` : ``}" 주변 매물 관련
+                    통계
+                  </ResultTitleSpan>
+                  <ResultSubTitleSpan>
+                    차트를 클릭하면 자세한 정보를 볼 수 있습니다.
+                  </ResultSubTitleSpan>
+                </ResultTitleContainer>
+                {chartmode === ALL && (
+                  <ResultMainContainer>
+                    <ResultSubContainer>
+                      <ResultSubTitleSpan>막대그래프</ResultSubTitleSpan>
+                      <BarComponent
+                        chartmode={chartmode}
+                        setChartmode={setChartmode}
+                      />
+                    </ResultSubContainer>
+                    <ResultSubContainer>
+                      <ResultSubTitleSpan>워드클라우드</ResultSubTitleSpan>
+                      <WordcloudDetailItem
+                        mobile={window.innerWidth <= 500}
+                        hashtags={chartData.hashtags}
+                        chartmode={chartmode}
+                        setChartmode={setChartmode}
+                      />
+                    </ResultSubContainer>
+                    <ResultSubContainer>
+                      <ResultSubTitleSpan>파이차트</ResultSubTitleSpan>
+                      <PieComponent
+                        chartmode={chartmode}
+                        setChartmode={setChartmode}
+                      />
+                    </ResultSubContainer>
+                  </ResultMainContainer>
+                )}
+                {chartmode === BAR && (
+                  <div onClick={() => setChartmode(ALL)}>막대디테일</div>
+                )}
+                {chartmode === WORDCLOUD && (
+                  <div onClick={() => setChartmode(ALL)}>
+                    워드클라우드디테일
+                  </div>
+                )}
+                {chartmode === PIE && (
+                  <div onClick={() => setChartmode(ALL)}>파이디테일</div>
+                )}
+              </ResultArticleContainer>
+            )}
+          <ResultArticleContainer>
+            <ResultTitleContainer>
+              <ResultTitleSpan>선택된 지역 매물 한 눈에 보기</ResultTitleSpan>
+              <ResultSubTitleSpan>
+                마커에 마우스(손가락)를(을) 올리시면 해당 지역과 평균을 비교할
+                수 있습니다.
+              </ResultSubTitleSpan>
+            </ResultTitleContainer>
+            <ResultMainContainer>
+              <ResultSubContainer></ResultSubContainer>
+              <ResultSubContainer></ResultSubContainer>
+            </ResultMainContainer>
+          </ResultArticleContainer>
+        </>
       )}
     </MainContainer>
   );
