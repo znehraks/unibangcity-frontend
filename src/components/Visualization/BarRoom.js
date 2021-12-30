@@ -10,11 +10,11 @@ import {
 } from "chart.js";
 import { Bar } from "react-chartjs-2";
 import styled from "styled-components";
-import { ALL, BAR } from "../Enum";
+import { ALL, BAR, MONTHPAY, MONTHRESERV } from "../Enum";
 const BarWrapper = styled.div`
   width: 60%;
   height: 25vw;
-  display: ${(props) => (props.chartmode === ALL ? "flex" : "none")};
+  display: flex;
   justify-content: center;
   align-items: center;
 `;
@@ -27,53 +27,114 @@ ChartJS.register(
   Legend
 );
 
-export const options = {
-  maintainAspectRatio: false,
-  responsive: true,
-  scales: {
-    yAxes: [
-      {
-        scaleLabel: { display: true, labelString: "만원" },
-        ticks: {
-          min: 0, // 스케일에 대한 최솟갓 설정, 0 부터 시작
-          stepSize: 1, // 스케일에 대한 사용자 고정 정의 값
+const BarRoom = ({
+  isChecked,
+  chartmode,
+  setChartmode,
+  monthlyDepositEachAggregated,
+  monthlyPayEachAggregated,
+  reservDepositEachAggregated,
+  monthlyDepositTotalAggregated,
+  monthlyPayTotalAggregated,
+  reservDepositTotalAggregated,
+  clickedMarker,
+}) => {
+  const options = {
+    maintainAspectRatio: false,
+    responsive: true,
+    scales: {
+      yAxes: [
+        {
+          scaleLabel: { display: true, labelString: "만원" },
+          ticks: {
+            min: 0, // 스케일에 대한 최솟갓 설정, 0 부터 시작
+            stepSize: 1, // 스케일에 대한 사용자 고정 정의 값
+          },
         },
+      ],
+    },
+
+    plugins: {
+      legend: {
+        position: "top",
+      },
+      title: {
+        display: true,
+        text: ``,
+      },
+    },
+  };
+
+  const labels = [""];
+
+  const data = {
+    labels,
+    datasets: [
+      {
+        label: `${clickedMarker + 1}위 지역`,
+        data:
+          isChecked === MONTHRESERV
+            ? [monthlyDepositEachAggregated.avg[clickedMarker]]
+            : isChecked === MONTHPAY
+            ? [monthlyPayEachAggregated.avg[clickedMarker]]
+            : [reservDepositEachAggregated.avg[clickedMarker]],
+        backgroundColor: "rgba(255, 99, 132, 0.5)",
+      },
+      {
+        label: "5개 지역 평균",
+        data:
+          isChecked === MONTHRESERV
+            ? [monthlyDepositTotalAggregated.avg[0]]
+            : isChecked === MONTHPAY
+            ? [monthlyPayTotalAggregated.avg[0]]
+            : [reservDepositTotalAggregated.avg[0]],
+        backgroundColor: "rgba(53, 162, 235, 0.5)",
       },
     ],
-  },
-
-  plugins: {
-    legend: {
-      position: "top",
-    },
-    title: {
-      display: true,
-      text: "Chart.js Bar Chart",
-    },
-  },
-};
-
-const labels = ["June"];
-
-export const data = {
-  labels,
-  datasets: [
-    {
-      label: "Dataset 1",
-      data: [1500],
-      backgroundColor: "rgba(255, 99, 132, 0.5)",
-    },
-    {
-      label: "Dataset 2",
-      data: [500],
-      backgroundColor: "rgba(53, 162, 235, 0.5)",
-    },
-  ],
-};
-
-const BarRoom = ({ chartmode, setChartmode }) => {
+  };
   return (
-    <BarWrapper chartmode={chartmode} onClick={() => setChartmode(BAR)}>
+    <BarWrapper
+      chartmode={chartmode}
+      onClick={() => setChartmode(chartmode === BAR ? ALL : BAR)}
+    >
+      {/* <h1>
+        선택된 곳 월세보증금 최대:{" "}
+        {monthlyDepositEachAggregated.max[clickedMarker]}
+      </h1>
+      <h1>
+        선택된 곳 월세보증금 최소:
+        {monthlyDepositEachAggregated.min[clickedMarker]}
+      </h1>
+      <h1>
+        선택된 곳 월세보증금 평균:
+        {monthlyDepositEachAggregated.avg[clickedMarker]}
+      </h1>
+      <h1>
+        선택된 곳 월세 매물 수:
+        {monthlyDepositEachAggregated.count[clickedMarker]}
+      </h1>
+      <h1>선택된 곳 월세최대:{monthlyPayEachAggregated.max[clickedMarker]}</h1>
+      <h1>선택된 곳 월세 최소:{monthlyPayEachAggregated.min[clickedMarker]}</h1>
+      <h1>선택된 곳 월세평균:{monthlyPayEachAggregated.avg[clickedMarker]}</h1>
+      <h1>
+        선택된 곳 월세 매물 수:{monthlyPayEachAggregated.count[clickedMarker]}
+      </h1>
+      <h1>
+        선택된 곳 전세 보증금 최대:
+        {reservDepositEachAggregated.max[clickedMarker]}
+      </h1>
+      <h1>
+        선택된 곳 전세 보증금 최소:
+        {reservDepositEachAggregated.min[clickedMarker]}
+      </h1>
+      <h1>
+        선택된 곳 전세 보증금 평균:
+        {reservDepositEachAggregated.avg[clickedMarker]}
+      </h1>
+      <h1>
+        선택된 곳 전세 보증금 매물 수:
+        {reservDepositEachAggregated.count[clickedMarker]}
+      </h1> */}
       <Bar options={options} data={data} />
     </BarWrapper>
   );

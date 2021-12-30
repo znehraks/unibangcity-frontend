@@ -18,6 +18,9 @@ import {
   BAR,
   WORDCLOUD,
   PIE,
+  MONTHRESERV,
+  MONTHPAY,
+  RESERV,
 } from "../../components/Enum";
 import useInput from "../../components/hooks/useInput";
 import {
@@ -40,10 +43,13 @@ import house_red_img from "../../components/styles/images/house_red.png";
 import ArticleButton from "../../components/ArticleButton";
 import { Api } from "../../api";
 import Map from "../../components/kakao/Map";
+import Map2 from "../../components/kakao/Map2";
 import RadarArticle from "../../components/Visualization/RadarArticle";
 import WordcloudDetailItem from "../../components/Visualization/Detail/WordcloudDetailItem";
 import BarComponent from "../../components/Visualization/BarRoom";
 import PieComponent from "../../components/Visualization/PieRoom";
+const { kakao } = window;
+
 const MainContainer = styled.div`
   width: 100%;
   height: ${(props) => (props.mode === RESULT ? `auto` : `80%`)};
@@ -188,8 +194,11 @@ const ResultTitleSpan = styled.div`
 `;
 const ResultSubTitleSpan = styled.div`
   font-size: 1vw;
-  margin-bottom: 1vw;
+  margin: 1vw 0;
   text-align: center;
+  strong {
+    color: ${(props) => props.theme.headerRed};
+  }
 `;
 
 const ResultMainContainer = styled.div`
@@ -209,6 +218,113 @@ const ResultSubContainer = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
+`;
+
+const ResultDetailContainer = styled.div`
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+`;
+
+const ResultDetailChartContainer = styled.div`
+  width: 45%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+`;
+
+const ResultDetailContentContainer = styled.div`
+  width: 55%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  font-size: 1.4vw;
+`;
+const ResultTable = styled.div`
+  margin-top: 1vw;
+  width: 90%;
+  height: 32%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  border: 1px solid rgba(0, 0, 0, 0.5);
+`;
+const ResultRow = styled.div`
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  font-size: 1.2vw;
+`;
+const ResultCell = styled.div`
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 1px solid rgba(0, 0, 0, 0.5);
+`;
+const ResultDetailSpanContainer = styled.div`
+  width: 90%;
+  height: 30%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+  padding-top: 2vw;
+  font-size: 1.2vw;
+`;
+const ResultDetailSpan = styled.div`
+  margin-top: 1vw;
+  font-size: 1.2vw;
+  strong {
+    color: ${(props) => props.theme.headerRed};
+  }
+`;
+
+const ResultDetailImgContainer = styled.div`
+  width: 60%;
+  height: 50%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+`;
+const ResultDetailImg = styled.img``;
+const BarChartSelectContainer = styled.div`
+  width: 60%;
+  height: 2%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+  align-items: center;
+`;
+
+const BarChartSelect = styled.span`
+  font-size: 0.9vw;
+  cursor: pointer;
+  :first-child {
+    color: ${(props) =>
+      props.isChecked === MONTHRESERV && `${props.theme.headerRed}`};
+  }
+  :nth-child(2) {
+    color: ${(props) =>
+      props.isChecked === MONTHPAY && `${props.theme.headerRed}`};
+  }
+  :last-child {
+    color: ${(props) =>
+      props.isChecked === RESERV && `${props.theme.headerRed}`};
+  }
 `;
 
 const Recommendation = () => {
@@ -234,15 +350,19 @@ const Recommendation = () => {
   const [isClicked, setIsClicked] = useState("");
   const [isHovered, setIsHovered] = useState("");
   const [chartData, setChartData] = useState({
-    hashtags: [],
-    monthlyDeposit: [],
-    monthlyPay: [],
-    reservDeposit: [],
-    price: [],
+    hashtagsEach: [],
+    monthlyDepositEachAggregated: {},
+    monthlyPayEachAggregated: {},
+    reservDepositEachAggregated: {},
+    hashtagsTotal: [],
+    monthlyDepositTotalAggregated: {},
+    monthlyPayTotalAggregated: {},
+    reservDepositTotalAggregated: {},
   });
   const [isChecked, setIsChecked] = useState("monthReserv");
-
   const [chartmode, setChartmode] = useState(ALL);
+  const [positions, setPositions] = useState([]);
+
   const getAggregated = () => {
     //마커 레이더차트
     let weight_names = ["거리", "역세권", "가성비", "안전", "매물"];
@@ -260,77 +380,208 @@ const Recommendation = () => {
     setAggregated(newArr);
   };
 
-  const getChartData = () => {
+  const getChartAggregated = () => {
     //해시태그 모음
-    const hashtagsTemp = [];
+    const hashtagsEach = [];
+    const hashtagsTotalTemp = [];
+    const hashtagsTotal = [];
 
     //월세보증금
-    const monthlyDepositTemp = [];
+    const monthlyDepositEachAggregated = {
+      max: [],
+      min: [],
+      avg: [],
+      count: [],
+    };
+    const monthlyDepositTotalTemp = [];
+    const monthlyDepositTotalAggregated = {
+      max: [],
+      min: [],
+      avg: [],
+      count: [],
+    };
 
     //월세
-    const monthlyPayTemp = [];
+    const monthlyPayEachAggregated = { max: [], min: [], avg: [], count: [] };
+    const monthlyPayTotalTemp = [];
+    const monthlyPayTotalAggregated = { max: [], min: [], avg: [], count: [] };
 
     //전세
-    const reservDepositTemp = [];
+    const reservDepositEachAggregated = {
+      max: [],
+      min: [],
+      avg: [],
+      count: [],
+    };
+    const reservDepositTotalTemp = [];
+    const reservDepositTotalAggregated = {
+      max: [],
+      min: [],
+      avg: [],
+      count: [],
+    };
 
     //매매
-    const priceTemp = [];
-
     for (let i = 0; i < data.length; i++) {
-      try {
-        for (let j = 0; j < data[i].rooms_hash_tags.length; j++) {
-          hashtagsTemp.push(data[i].rooms_hash_tags[j]);
-        }
+      const hashtagsTemp = [];
+      const monthlyDepositTemp = [];
+      const monthlyPayTemp = [];
+      const reservDepositTemp = [];
+      const priceTemp = [];
+      for (let j = 0; j < data[i].rooms_hash_tags.length; j++) {
+        hashtagsTemp.push(data[i].rooms_hash_tags[j]);
+      }
 
-        for (let j = 0; j < data[i].rooms_desc.length; j++) {
-          hashtagsTemp.push(data[i].rooms_desc[j].split("|")[0].trim());
+      for (let j = 0; j < data[i].rooms_price_title.length; j++) {
+        hashtagsTemp.push(data[i].rooms_desc[j].split("|")[0].trim());
 
-          hashtagsTemp.push(data[i].rooms_desc2[j].split(",")[0].trim());
+        hashtagsTemp.push(data[i].rooms_desc2[j].split(",")[0].trim());
 
-          if (data[i].rooms_selling_type[j] === 0) {
-            if (data[i].rooms_price_title[j].includes("억")) {
-              monthlyDepositTemp.push(
-                Number(data[i].rooms_price_title[j].split("억")[0]) * 10000
-              );
-              monthlyPayTemp.push(
-                Number(data[i].rooms_price_title[j].split("억")[0]) * 10000
-              );
-            } else {
-              monthlyDepositTemp.push(
-                Number(data[i].rooms_price_title[j].split("/")[0])
-              );
-              monthlyPayTemp.push(
-                Number(data[i].rooms_price_title[j].split("/")[1])
-              );
-            }
-          } else if (data[i].rooms_selling_type[j] === 1) {
-            if (data[i].rooms_price_title[j].includes("억")) {
-              reservDepositTemp.push(
-                Number(data[i].rooms_price_title[j].split("억")[0]) * 10000
-              );
-            } else {
-              reservDepositTemp.push(Number(data[i].rooms_price_title[j]));
-            }
+        if (data[i].rooms_selling_type[j] === 0) {
+          if (data[i].rooms_price_title[j].includes("억")) {
+            monthlyDepositTemp.push(
+              Number(data[i].rooms_price_title[j].split("억")[0]) * 10000
+            );
+            monthlyPayTemp.push(
+              Number(data[i].rooms_price_title[j].split("억")[0]) * 10000
+            );
           } else {
-            if (data[i].rooms_price_title[j].includes("억")) {
-              priceTemp.push(
-                Number(data[i].rooms_price_title[j].split("억")[0]) * 10000
-              );
-            } else {
-              priceTemp.push(Number(data[i].rooms_price_title[j]));
-            }
+            monthlyDepositTemp.push(
+              Number(data[i].rooms_price_title[j].split("/")[0])
+            );
+            monthlyPayTemp.push(
+              Number(data[i].rooms_price_title[j].split("/")[1])
+            );
+          }
+        } else if (data[i].rooms_selling_type[j] === 1) {
+          if (data[i].rooms_price_title[j].includes("억")) {
+            reservDepositTemp.push(
+              Number(data[i].rooms_price_title[j].split("억")[0]) * 10000
+            );
+          } else {
+            reservDepositTemp.push(Number(data[i].rooms_price_title[j]));
+          }
+        } else {
+          if (data[i].rooms_price_title[j].includes("억")) {
+            priceTemp.push(
+              Number(data[i].rooms_price_title[j].split("억")[0]) * 10000
+            );
+          } else {
+            priceTemp.push(Number(data[i].rooms_price_title[j]));
           }
         }
-      } catch (e) {}
+      }
+      hashtagsEach.push(hashtagsTemp);
+
+      monthlyDepositEachAggregated.max.push(Math.max(...monthlyDepositTemp));
+      monthlyPayEachAggregated.max.push(Math.max(...monthlyPayTemp));
+      reservDepositEachAggregated.max.push(Math.max(...reservDepositTemp));
+
+      monthlyDepositEachAggregated.min.push(Math.min(...monthlyDepositTemp));
+      monthlyPayEachAggregated.min.push(Math.min(...monthlyPayTemp));
+      reservDepositEachAggregated.min.push(Math.min(...reservDepositTemp));
+
+      monthlyDepositEachAggregated.avg.push(
+        Math.round(
+          monthlyDepositTemp.reduce((a, b) => a + b, 0) /
+            monthlyDepositTemp.length
+        )
+      );
+      monthlyPayEachAggregated.avg.push(
+        Math.round(
+          monthlyPayTemp.reduce((a, b) => a + b, 0) / monthlyPayTemp.length
+        )
+      );
+      reservDepositEachAggregated.avg.push(
+        Math.round(
+          reservDepositTemp.reduce((a, b) => a + b, 0) /
+            reservDepositTemp.length
+        )
+      );
+
+      monthlyDepositEachAggregated.count.push(monthlyDepositTemp.length);
+      monthlyPayEachAggregated.count.push(monthlyPayTemp.length);
+      reservDepositEachAggregated.count.push(reservDepositTemp.length);
+
+      hashtagsTotalTemp.push(...hashtagsTemp);
+      monthlyDepositTotalTemp.push(...monthlyDepositTemp);
+      monthlyPayTotalTemp.push(...monthlyPayTemp);
+      reservDepositTotalTemp.push(...reservDepositTemp);
     }
+
+    hashtagsTotal.push(...hashtagsTotalTemp);
+
+    monthlyDepositTotalAggregated.max.push(
+      Math.max(...monthlyDepositTotalTemp)
+    );
+    monthlyPayTotalAggregated.max.push(Math.max(...monthlyPayTotalTemp));
+    reservDepositTotalAggregated.max.push(Math.max(...reservDepositTotalTemp));
+
+    monthlyDepositTotalAggregated.min.push(
+      Math.min(...monthlyDepositTotalTemp)
+    );
+    monthlyPayTotalAggregated.min.push(Math.min(...monthlyPayTotalTemp));
+    reservDepositTotalAggregated.min.push(Math.min(...reservDepositTotalTemp));
+
+    monthlyDepositTotalAggregated.avg.push(
+      Math.round(
+        monthlyDepositTotalTemp.reduce((a, b) => a + b, 0) /
+          monthlyDepositTotalTemp.length
+      )
+    );
+    monthlyPayTotalAggregated.avg.push(
+      Math.round(
+        monthlyPayTotalTemp.reduce((a, b) => a + b, 0) /
+          monthlyPayTotalTemp.length
+      )
+    );
+    reservDepositTotalAggregated.avg.push(
+      Math.round(
+        reservDepositTotalTemp.reduce((a, b) => a + b, 0) /
+          reservDepositTotalTemp.length
+      )
+    );
+
+    monthlyDepositTotalAggregated.count.push(monthlyDepositTotalTemp.length);
+    monthlyPayTotalAggregated.count.push(monthlyPayTotalTemp.length);
+    reservDepositTotalAggregated.count.push(reservDepositTotalTemp.length);
+
     setChartData({
-      hashtags: hashtagsTemp.sort(),
-      monthlyDeposit: monthlyDepositTemp,
-      monthlyPay: monthlyPayTemp,
-      reservDeposit: reservDepositTemp,
-      price: priceTemp,
+      hashtagsEach,
+      monthlyDepositEachAggregated,
+      monthlyPayEachAggregated,
+      reservDepositEachAggregated,
+      hashtagsTotal,
+      monthlyDepositTotalAggregated,
+      monthlyPayTotalAggregated,
+      reservDepositTotalAggregated,
     });
+
     console.log(chartData);
+  };
+
+  const unitTransformer = (value) => {
+    return value >= 10000
+      ? `${Math.round(value / 10000)}억 ${
+          value % 10000 === 0 ? "(원)" : `${value % 10000}(만 원)`
+        }`
+      : `${value}천(만 원)`;
+  };
+
+  const getPositions = () => {
+    console.log(isClicked.rooms_location_lat);
+    if (isClicked) {
+      let temp = [];
+      for (let i = 0; i < isClicked.rooms_location_lat.length; i++) {
+        temp.push({
+          latlng: new kakao.maps.LatLng(
+            isClicked.rooms_location_lat[i],
+            isClicked.rooms_location_lon[i]
+          ),
+        });
+      }
+      setPositions(temp);
+    }
   };
   useEffect(() => {
     if (
@@ -359,11 +610,14 @@ const Recommendation = () => {
     if (data.length !== 0 && aggregated.length === 0) {
       getAggregated();
     }
-    if (data.length !== 0 && chartData.hashtags.length === 0) {
-      getChartData();
+    if (data.length !== 0) {
+      getChartAggregated();
+    }
+    if (data.length !== 0) {
+      getPositions();
     }
     console.log(isClicked);
-  }, [mode, isHovered]);
+  }, [mode, isHovered, isClicked]);
   return (
     <MainContainer mode={mode}>
       {mode !== RESULT && (
@@ -864,60 +1118,407 @@ const Recommendation = () => {
               </ResultSubContainer>
             </ResultMainContainer>
           </ResultArticleContainer>
-          {isClicked &&
-            chartData.monthlyDeposit.length !== 0 &&
-            chartData.monthlyPay.length !== 0 &&
-            chartData.reservDeposit.length !== 0 && (
-              <ResultArticleContainer>
-                <ResultTitleContainer>
-                  <ResultTitleSpan>
-                    "{currentAddress ? `${currentAddress}` : ``}" 주변 매물 관련
-                    통계
-                  </ResultTitleSpan>
-                  <ResultSubTitleSpan>
-                    차트를 클릭하면 자세한 정보를 볼 수 있습니다.
-                  </ResultSubTitleSpan>
-                </ResultTitleContainer>
-                {chartmode === ALL && (
-                  <ResultMainContainer>
-                    <ResultSubContainer>
-                      <ResultSubTitleSpan>막대그래프</ResultSubTitleSpan>
-                      <BarComponent
-                        chartmode={chartmode}
-                        setChartmode={setChartmode}
-                      />
-                    </ResultSubContainer>
-                    <ResultSubContainer>
-                      <ResultSubTitleSpan>워드클라우드</ResultSubTitleSpan>
-                      <WordcloudDetailItem
-                        mobile={window.innerWidth <= 500}
-                        hashtags={chartData.hashtags}
-                        chartmode={chartmode}
-                        setChartmode={setChartmode}
-                      />
-                    </ResultSubContainer>
-                    <ResultSubContainer>
-                      <ResultSubTitleSpan>파이차트</ResultSubTitleSpan>
+          {isClicked && chartData.hashtagsTotal.length !== 0 && (
+            <ResultArticleContainer>
+              <ResultTitleContainer>
+                <ResultTitleSpan>
+                  "{isClicked.rank}위 지역(
+                  {currentAddress ? `${currentAddress}` : ``})" 주변 매물 관련
+                  통계
+                </ResultTitleSpan>
+                <ResultSubTitleSpan>
+                  {chartmode === ALL
+                    ? "차트를 클릭하면 자세한 정보를 볼 수 있습니다."
+                    : "차트를 클릭하면 이전 화면으로 돌아갈 수 있습니다."}
+                </ResultSubTitleSpan>
+              </ResultTitleContainer>
+              {chartmode === ALL && (
+                <ResultMainContainer>
+                  <ResultSubContainer>
+                    <ResultSubTitleSpan>
+                      {isClicked.rank}위 지역과 전체 평균 간{" "}
+                      <strong>
+                        {isChecked === MONTHRESERV
+                          ? "월세 보증금"
+                          : isChecked === MONTHPAY
+                          ? "월세"
+                          : "전세 보증금"}
+                      </strong>{" "}
+                      보증금 비교
+                    </ResultSubTitleSpan>
+                    <BarChartSelectContainer>
+                      <BarChartSelect
+                        isChecked={isChecked}
+                        onClick={() => setIsChecked(MONTHRESERV)}
+                      >
+                        월세 보증금
+                      </BarChartSelect>
+                      <BarChartSelect
+                        isChecked={isChecked}
+                        onClick={() => setIsChecked(MONTHPAY)}
+                      >
+                        월세
+                      </BarChartSelect>
+                      <BarChartSelect
+                        isChecked={isChecked}
+                        onClick={() => setIsChecked(RESERV)}
+                      >
+                        전세
+                      </BarChartSelect>
+                    </BarChartSelectContainer>
+
+                    <BarComponent
+                      isChecked={isChecked}
+                      chartmode={chartmode}
+                      setChartmode={setChartmode}
+                      monthlyDepositEachAggregated={
+                        chartData.monthlyDepositEachAggregated
+                      }
+                      monthlyPayEachAggregated={
+                        chartData.monthlyPayEachAggregated
+                      }
+                      reservDepositEachAggregated={
+                        chartData.reservDepositEachAggregated
+                      }
+                      monthlyDepositTotalAggregated={
+                        chartData.monthlyDepositTotalAggregated
+                      }
+                      monthlyPayTotalAggregated={
+                        chartData.monthlyPayTotalAggregated
+                      }
+                      reservDepositTotalAggregated={
+                        chartData.reservDepositTotalAggregated
+                      }
+                      clickedMarker={isClicked.rank - 1}
+                    />
+                  </ResultSubContainer>
+                  <ResultSubContainer>
+                    <ResultSubTitleSpan>
+                      {isClicked.rank}위 지역의 핵심 키워드
+                    </ResultSubTitleSpan>
+                    <BarChartSelectContainer></BarChartSelectContainer>
+                    <WordcloudDetailItem
+                      mobile={window.innerWidth <= 500}
+                      hashtags={chartData.hashtagsEach[isClicked.rank - 1]}
+                      chartmode={chartmode}
+                      setChartmode={setChartmode}
+                    />
+                  </ResultSubContainer>
+                  <ResultSubContainer>
+                    <ResultSubTitleSpan>
+                      {isClicked.rank}위 지역의 매물 종류 분포
+                    </ResultSubTitleSpan>
+                    <BarChartSelectContainer></BarChartSelectContainer>
+                    <PieComponent
+                      isClicked={isClicked}
+                      chartmode={chartmode}
+                      setChartmode={setChartmode}
+                    />
+                  </ResultSubContainer>
+                </ResultMainContainer>
+              )}
+              {chartmode === BAR && (
+                <ResultDetailContainer>
+                  <ResultDetailChartContainer>
+                    <ResultSubTitleSpan>
+                      {isClicked.rank}위 지역과 전체 평균 간{" "}
+                      <strong>
+                        {isChecked === MONTHRESERV
+                          ? "월세 보증금"
+                          : isChecked === MONTHPAY
+                          ? "월세"
+                          : "전세 보증금"}
+                      </strong>{" "}
+                      보증금 비교
+                    </ResultSubTitleSpan>
+                    <BarChartSelectContainer>
+                      <BarChartSelect
+                        isChecked={isChecked}
+                        onClick={() => setIsChecked(MONTHRESERV)}
+                      >
+                        월세 보증금
+                      </BarChartSelect>
+                      <BarChartSelect
+                        isChecked={isChecked}
+                        onClick={() => setIsChecked(MONTHPAY)}
+                      >
+                        월세
+                      </BarChartSelect>
+                      <BarChartSelect
+                        isChecked={isChecked}
+                        onClick={() => setIsChecked(RESERV)}
+                      >
+                        전세
+                      </BarChartSelect>
+                    </BarChartSelectContainer>
+                    <BarComponent
+                      isChecked={isChecked}
+                      chartmode={chartmode}
+                      setChartmode={setChartmode}
+                      monthlyDepositEachAggregated={
+                        chartData.monthlyDepositEachAggregated
+                      }
+                      monthlyPayEachAggregated={
+                        chartData.monthlyPayEachAggregated
+                      }
+                      reservDepositEachAggregated={
+                        chartData.reservDepositEachAggregated
+                      }
+                      monthlyDepositTotalAggregated={
+                        chartData.monthlyDepositTotalAggregated
+                      }
+                      monthlyPayTotalAggregated={
+                        chartData.monthlyPayTotalAggregated
+                      }
+                      reservDepositTotalAggregated={
+                        chartData.reservDepositTotalAggregated
+                      }
+                      clickedMarker={isClicked.rank - 1}
+                    />
+                  </ResultDetailChartContainer>
+                  <ResultDetailContentContainer>
+                    {isClicked.rank}위 지역의 통계
+                    <ResultTable>
+                      <ResultRow>
+                        <ResultCell></ResultCell>
+                        <ResultCell>최고가</ResultCell>
+                        <ResultCell>최저가</ResultCell>
+                        <ResultCell>평균가</ResultCell>
+                        <ResultCell>매물 수</ResultCell>
+                      </ResultRow>
+                      <ResultRow>
+                        <ResultCell>월세 보증금</ResultCell>
+                        <ResultCell>
+                          {unitTransformer(
+                            chartData.monthlyDepositEachAggregated.max[
+                              isClicked.rank - 1
+                            ]
+                          )}
+                        </ResultCell>
+                        <ResultCell>
+                          {unitTransformer(
+                            chartData.monthlyDepositEachAggregated.min[
+                              isClicked.rank - 1
+                            ]
+                          )}
+                        </ResultCell>
+                        <ResultCell>
+                          {unitTransformer(
+                            chartData.monthlyDepositEachAggregated.avg[
+                              isClicked.rank - 1
+                            ]
+                          )}
+                        </ResultCell>
+                        <ResultCell>
+                          {
+                            chartData.monthlyDepositEachAggregated.count[
+                              isClicked.rank - 1
+                            ]
+                          }
+                          개
+                        </ResultCell>
+                      </ResultRow>
+                      <ResultRow>
+                        <ResultCell>월세</ResultCell>
+                        <ResultCell>
+                          {unitTransformer(
+                            chartData.monthlyPayEachAggregated.max[
+                              isClicked.rank - 1
+                            ]
+                          )}
+                        </ResultCell>
+                        <ResultCell>
+                          {unitTransformer(
+                            chartData.monthlyPayEachAggregated.min[
+                              isClicked.rank - 1
+                            ]
+                          )}
+                        </ResultCell>
+                        <ResultCell>
+                          {unitTransformer(
+                            chartData.monthlyPayEachAggregated.avg[
+                              isClicked.rank - 1
+                            ]
+                          )}
+                        </ResultCell>
+                        <ResultCell>''</ResultCell>
+                      </ResultRow>
+                      <ResultRow>
+                        <ResultCell>전세 보증금</ResultCell>
+                        <ResultCell>
+                          {unitTransformer(
+                            chartData.reservDepositEachAggregated.max[
+                              isClicked.rank - 1
+                            ]
+                          )}
+                        </ResultCell>
+                        <ResultCell>
+                          {unitTransformer(
+                            chartData.reservDepositEachAggregated.min[
+                              isClicked.rank - 1
+                            ]
+                          )}
+                        </ResultCell>
+                        <ResultCell>
+                          {unitTransformer(
+                            chartData.reservDepositEachAggregated.avg[
+                              isClicked.rank - 1
+                            ]
+                          )}
+                        </ResultCell>
+                        <ResultCell>
+                          {
+                            chartData.reservDepositEachAggregated.count[
+                              isClicked.rank - 1
+                            ]
+                          }
+                          개
+                        </ResultCell>
+                      </ResultRow>
+                    </ResultTable>
+                    <ResultDetailSpanContainer>
+                      <ResultDetailSpan>
+                        {isClicked.rank}위 지역은 <strong>월세 보증금</strong>이
+                        평균에 비해{" "}
+                        <strong>
+                          {Math.abs(
+                            chartData.monthlyDepositEachAggregated.avg[
+                              isClicked.rank - 1
+                            ] - chartData.monthlyDepositTotalAggregated.avg
+                          )}
+                          만 원{" "}
+                        </strong>
+                        {chartData.monthlyDepositEachAggregated.avg[
+                          isClicked.rank - 1
+                        ] -
+                          chartData.monthlyDepositTotalAggregated.avg >=
+                        0
+                          ? "비싸네요."
+                          : "싸네요."}
+                      </ResultDetailSpan>
+                      <ResultDetailSpan>
+                        {isClicked.rank}위 지역은 <strong>월세</strong>가 평균에
+                        비해{" "}
+                        <strong>
+                          {Math.abs(
+                            chartData.monthlyPayEachAggregated.avg[
+                              isClicked.rank - 1
+                            ] - chartData.monthlyPayTotalAggregated.avg
+                          )}
+                          만 원{" "}
+                        </strong>
+                        {chartData.monthlyPayEachAggregated.avg[
+                          isClicked.rank - 1
+                        ] -
+                          chartData.monthlyPayTotalAggregated.avg >=
+                        0
+                          ? "비싸네요."
+                          : "싸네요."}
+                      </ResultDetailSpan>
+                      <ResultDetailSpan>
+                        {isClicked.rank}위 지역은 <strong>전세 보증금</strong>이
+                        평균에 비해{" "}
+                        <strong>
+                          {Math.abs(
+                            chartData.reservDepositEachAggregated.avg[
+                              isClicked.rank - 1
+                            ] - chartData.reservDepositTotalAggregated.avg
+                          )}
+                          만 원{" "}
+                        </strong>
+                        {chartData.reservDepositEachAggregated.avg[
+                          isClicked.rank - 1
+                        ] -
+                          chartData.reservDepositTotalAggregated.avg >=
+                        0
+                          ? "비싸네요."
+                          : "싸네요."}
+                      </ResultDetailSpan>
+                      <ResultDetailSpan>
+                        그리고,{" "}
+                        <strong>
+                          {chartData.reservDepositEachAggregated.count[
+                            isClicked.rank - 1
+                          ] +
+                            chartData.monthlyDepositEachAggregated.count[
+                              isClicked.rank - 1
+                            ]}
+                          개의 전세/월세 매물
+                        </strong>
+                        이 있군요.
+                      </ResultDetailSpan>
+                    </ResultDetailSpanContainer>
+                  </ResultDetailContentContainer>
+                </ResultDetailContainer>
+              )}
+              {chartmode === WORDCLOUD && (
+                <ResultDetailContainer>
+                  <ResultDetailChartContainer>
+                    <ResultSubTitleSpan>
+                      {isClicked.rank}위 지역의 핵심 키워드
+                    </ResultSubTitleSpan>
+                    <BarChartSelectContainer></BarChartSelectContainer>
+                    <WordcloudDetailItem
+                      mobile={window.innerWidth <= 500}
+                      hashtags={chartData.hashtagsEach[isClicked.rank - 1]}
+                      chartmode={chartmode}
+                      setChartmode={setChartmode}
+                    />
+                  </ResultDetailChartContainer>
+                </ResultDetailContainer>
+              )}
+              {chartmode === PIE && (
+                <ResultDetailContainer>
+                  {house ? (
+                    <ResultDetailChartContainer>
+                      <ResultSubTitleSpan>선택된 매물 정보</ResultSubTitleSpan>
+                      <ResultDetailImgContainer>
+                        <ResultDetailImg
+                          onClick={() => setHouse()}
+                          src={isClicked.rooms_img_url_01[house]}
+                          alt="매물 사진"
+                        />
+                      </ResultDetailImgContainer>
+                      <ResultDetailSpan>
+                        {isClicked.rooms_desc[house]}
+                      </ResultDetailSpan>
+                      <ResultDetailSpan>
+                        {isClicked.rooms_desc2[house]}
+                      </ResultDetailSpan>
+                      <ResultDetailSpan>
+                        {isClicked.rooms_price_title[house]}
+                      </ResultDetailSpan>
+                    </ResultDetailChartContainer>
+                  ) : (
+                    <ResultDetailChartContainer>
+                      <ResultSubTitleSpan>
+                        {isClicked.rank}위 지역의 매물 종류 분포
+                      </ResultSubTitleSpan>
                       <PieComponent
+                        isClicked={isClicked}
                         chartmode={chartmode}
                         setChartmode={setChartmode}
                       />
-                    </ResultSubContainer>
-                  </ResultMainContainer>
-                )}
-                {chartmode === BAR && (
-                  <div onClick={() => setChartmode(ALL)}>막대디테일</div>
-                )}
-                {chartmode === WORDCLOUD && (
-                  <div onClick={() => setChartmode(ALL)}>
-                    워드클라우드디테일
-                  </div>
-                )}
-                {chartmode === PIE && (
-                  <div onClick={() => setChartmode(ALL)}>파이디테일</div>
-                )}
-              </ResultArticleContainer>
-            )}
+                    </ResultDetailChartContainer>
+                  )}
+                  <ResultDetailContentContainer>
+                    {positions.length !== 0 && (
+                      <>
+                        <Map2
+                          isClicked={isClicked}
+                          univ_lat={answers.univ_lat}
+                          univ_lon={answers.univ_lon}
+                          residencePositions={positions}
+                          setHouse={setHouse}
+                          mobile={false}
+                        />
+                      </>
+                    )}
+                  </ResultDetailContentContainer>
+                </ResultDetailContainer>
+              )}
+            </ResultArticleContainer>
+          )}
           <ResultArticleContainer>
             <ResultTitleContainer>
               <ResultTitleSpan>선택된 지역 매물 한 눈에 보기</ResultTitleSpan>

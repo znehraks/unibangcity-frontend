@@ -4,23 +4,11 @@ import { ALL, WORDCLOUD } from "../../Enum";
 import Wordcloud from "../Wordcloud";
 
 const DetailItem = styled.div`
-  width: 60%;
-  display: ${(props) =>
-    (props.chartmode === ALL) | (props.chartmode === WORDCLOUD)
-      ? `flex`
-      : "none"};
+  width: 80%;
+  display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-`;
-
-const SubTitleSpan = styled.span`
-  font-size: 1vw;
-  margin-top: 0.5vw;
-  @media (max-width: 500px) {
-    font-size: 4vw;
-    padding-top: 10vw;
-  }
 `;
 
 const Detail = ({ hashtags, chartmode, setChartmode, mobile }) => {
@@ -30,14 +18,10 @@ const Detail = ({ hashtags, chartmode, setChartmode, mobile }) => {
       <DetailItem
         chartmode={chartmode}
         onClick={() => {
-          if (chartmode !== WORDCLOUD) {
-            setChartmode(WORDCLOUD);
-          } else {
-            setChartmode(ALL);
-          }
+          setChartmode(chartmode === WORDCLOUD ? ALL : WORDCLOUD);
         }}
       >
-        <Wordcloud mobile={mobile} hashtags={hashtags} />
+        <Wordcloud chartmode={chartmode} mobile={mobile} hashtags={hashtags} />
       </DetailItem>
     </>
   );

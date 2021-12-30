@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import ReactWordCloud from "react-wordcloud";
 import styled from "styled-components";
-import { Resizable } from "re-resizable";
 
 const Wrapper = styled.div`
   height: 25vw;
@@ -9,35 +8,29 @@ const Wrapper = styled.div`
   justify-content: center;
   align-items: center;
 `;
-const Wordcloud = ({ hashtags, mobile }) => {
+const Wordcloud = ({ chartMode, hashtags, mobile }) => {
   const [hashtagsDict, setHashtagsDict] = useState([]);
-  useEffect(() => {
-    let temp = [];
-    let count = 0;
+  const hashCount = () => {
+    const count = {};
     for (let i = 0; i < hashtags.length; i++) {
-      let dict = {};
-      if (
-        i === 0 ||
-        hashtags[i] !== hashtags[i - 1] ||
-        (i === hashtags.length - 1 && hashtags[i] === hashtags[i - 1])
-      ) {
-        count++;
-        dict["text"] = hashtags[i].trim();
-        dict["value"] = count;
-        temp.push(dict);
-        count = 0;
-      } else if (i === hashtags.length - 1 && hashtags[i] !== hashtags[i - 1]) {
-        count++;
-        dict["text"] = hashtags[i].trim();
-        dict["value"] = count;
-        temp.push(dict);
-        count = 0;
+      if (count[hashtags[i].trim()]) {
+        count[hashtags[i].trim()] += 1;
       } else {
-        count++;
+        count[hashtags[i].trim()] = 1;
       }
     }
-    console.log(temp);
-    setHashtagsDict(temp);
+    const wordcloudCount = [];
+    for (let i = 0; i < Object.keys(count).length; i++) {
+      let temp = {};
+      temp["text"] = Object.keys(count)[i];
+      temp["value"] = Object.values(count)[i];
+      wordcloudCount.push(temp);
+    }
+    console.log(wordcloudCount);
+    setHashtagsDict(wordcloudCount);
+  };
+  useEffect(() => {
+    hashCount();
   }, []);
   const options = {
     rotations: 2,

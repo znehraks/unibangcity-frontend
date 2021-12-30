@@ -28,3 +28,8 @@ export const ALL = "ALL";
 export const BAR = "BAR";
 export const WORDCLOUD = "WORDCLOUD";
 export const PIE = "PIE";
+
+//BarChart Category Name
+export const MONTHRESERV = "MONTHRESERV";
+export const MONTHPAY = "MONTHPAY";
+export const RESERV = "RESERV";
