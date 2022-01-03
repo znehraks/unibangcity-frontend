@@ -146,8 +146,8 @@ const MapContainer = ({
     <div
       id="myMap2"
       style={{
-        width: mobile ? "80vw" : "30vw",
-        height: mobile ? "80vw" : "30vw",
+        width: mobile ? "80vw" : "25vw",
+        height: mobile ? "80vw" : "25vw",
       }}
     ></div>
   );

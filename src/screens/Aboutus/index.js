@@ -1,56 +1,14 @@
 import React from "react";
-import styled, { keyframes } from "styled-components";
 import {
+  MainArticleContainer,
+  MainContainer,
   MainSubTitleLink,
+  MainTitle,
+  MainTitleContainer,
   TextArticle,
   TextArticleSpan,
 } from "../../components/styles/StyledComponents";
-const TwinkleAnimation = keyframes`
-    0%{
-        opacity:0
-    }
-    50%{
-        opacity: 1;
-    }
-    100%{
-        opacity: 0;
-    }
-`;
-const MainContainer = styled.div`
-  width: 100%;
-  height: 80%;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  background: white;
-`;
-const MainTitleContainer = styled.div`
-  width: 100%;
-  height: 30%;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-`;
-const MainTitle = styled.div`
-  width: 100%;
-  font-size: 2vw;
-  font-weight: 800;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  margin-bottom: 1vw;
-`;
-const MainArticleContainer = styled.div`
-  width: 100%;
-  height: 70%;
-  display: flex;
-  flex-direction: row;
-  justify-content: space-evenly;
-  align-items: center;
-`;
+
 const Aboutus = () => {
   return (
     <MainContainer>

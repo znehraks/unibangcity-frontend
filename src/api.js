@@ -9,88 +9,28 @@ const api = axios.create({
 export const Api = {
   getResidence: (answers) => api.post(`/recommendation`, answers),
 
-  addDIYRecoHistory: (
-    user_no,
-    w_1st,
-    w_2nd,
-    w_3rd,
-    w1,
-    w2,
-    w3,
-    w4,
-    w5,
-    total_w,
-    Q1,
-    Q2,
-    Q3,
-    Q4,
-    Q5,
+  saveResult: (
+    univ_name,
     univ_lat,
     univ_lon,
-    T_set,
-    eval_01,
-    eval_02,
-    eval_03,
-    eval_04,
-    eval_05
+    scrapper_code,
+    rank01_T,
+    rank02_T,
+    rank03_T,
+    rank04_T,
+    rank05_T,
+    avg_T
   ) =>
-    api.post(`/add_diy`, {
-      user_no,
-      w_1st,
-      w_2nd,
-      w_3rd,
-      w1,
-      w2,
-      w3,
-      w4,
-      w5,
-      total_w,
-      Q1,
-      Q2,
-      Q3,
-      Q4,
-      Q5,
+    api.post(`/recommendation/create`, {
+      univ_name,
       univ_lat,
       univ_lon,
-      T_set,
-      eval_01,
-      eval_02,
-      eval_03,
-      eval_04,
-      eval_05,
+      scrapper_code,
+      rank01_T,
+      rank02_T,
+      rank03_T,
+      rank04_T,
+      rank05_T,
+      avg_T,
     }),
-
-  addEval: (
-    evaluation_category_no,
-    univ_name,
-    T_set,
-    rank01_score,
-    rank02_score,
-    rank03_score,
-    rank04_score,
-    rank05_score,
-    user_no
-  ) =>
-    api.post(`/add_eval`, {
-      evaluation_category_no,
-      univ_name,
-      T_set,
-      rank01_score,
-      rank02_score,
-      rank03_score,
-      rank04_score,
-      rank05_score,
-      user_no,
-    }),
-
-  Login: (user_id, user_pwd) => api.post(`/signin`, { user_id, user_pwd }),
-  Signup: (user_id, user_pwd, user_email, authNum) =>
-    api.post(`/signup`, { user_id, user_pwd, user_email, authNum }),
-  SendEmail: (user_email, authNum) =>
-    api.post(`/sendEmail`, { user_email, authNum }),
-  Resend: (user_email, user_id, user_pwd, authNum) =>
-    api.post(`/resend`, { user_email, user_id, user_pwd, authNum }),
-  Validate: (authNum) => api.post(`/validate`, { authNum }),
-
-  getDiyHistory: (user_id) => api.get(`/getDiyHistory/${user_id}`),
 };

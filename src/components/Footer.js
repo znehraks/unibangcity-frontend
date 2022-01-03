@@ -11,7 +11,9 @@ const FooterWrapper = styled.div`
 `;
 
 const Footer = () => {
-  return <FooterWrapper>made by DesignC</FooterWrapper>;
+  return (
+    <FooterWrapper>copyrightⓒ2022 znehraks All rights reserved.</FooterWrapper>
+  );
 };
 
 export default Footer;

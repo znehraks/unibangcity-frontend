@@ -97,44 +97,6 @@ const BarRoom = ({
       chartmode={chartmode}
       onClick={() => setChartmode(chartmode === BAR ? ALL : BAR)}
     >
-      {/* <h1>
-        선택된 곳 월세보증금 최대:{" "}
-        {monthlyDepositEachAggregated.max[clickedMarker]}
-      </h1>
-      <h1>
-        선택된 곳 월세보증금 최소:
-        {monthlyDepositEachAggregated.min[clickedMarker]}
-      </h1>
-      <h1>
-        선택된 곳 월세보증금 평균:
-        {monthlyDepositEachAggregated.avg[clickedMarker]}
-      </h1>
-      <h1>
-        선택된 곳 월세 매물 수:
-        {monthlyDepositEachAggregated.count[clickedMarker]}
-      </h1>
-      <h1>선택된 곳 월세최대:{monthlyPayEachAggregated.max[clickedMarker]}</h1>
-      <h1>선택된 곳 월세 최소:{monthlyPayEachAggregated.min[clickedMarker]}</h1>
-      <h1>선택된 곳 월세평균:{monthlyPayEachAggregated.avg[clickedMarker]}</h1>
-      <h1>
-        선택된 곳 월세 매물 수:{monthlyPayEachAggregated.count[clickedMarker]}
-      </h1>
-      <h1>
-        선택된 곳 전세 보증금 최대:
-        {reservDepositEachAggregated.max[clickedMarker]}
-      </h1>
-      <h1>
-        선택된 곳 전세 보증금 최소:
-        {reservDepositEachAggregated.min[clickedMarker]}
-      </h1>
-      <h1>
-        선택된 곳 전세 보증금 평균:
-        {reservDepositEachAggregated.avg[clickedMarker]}
-      </h1>
-      <h1>
-        선택된 곳 전세 보증금 매물 수:
-        {reservDepositEachAggregated.count[clickedMarker]}
-      </h1> */}
       <Bar options={options} data={data} />
     </BarWrapper>
   );

@@ -8,7 +8,7 @@ import GlobalStyle from "./styles/GlobalStyles";
 import Theme from "./styles/Theme";
 
 const Wrapper = styled.div`
-  width: 99vw;
+  width: 100vw;
   height: 100vh;
   background: #fff;
 `;
