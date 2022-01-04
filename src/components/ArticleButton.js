@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import styled from "styled-components";
 import { Q3, Q4, Q5 } from "./Enum";
+import PropTypes from "prop-types";
 const MainArticle = styled.div`
   width: 12vw;
   height: 12vw;
@@ -70,3 +71,14 @@ const ArticleButton = ({
 };
 
 export default ArticleButton;
+
+ArticleButton.propTypes = {
+  current: PropTypes.string.isRequired,
+  name: PropTypes.string.isRequired,
+  kr_name: PropTypes.string.isRequired,
+  black_img: PropTypes.string.isRequired,
+  red_img: PropTypes.string.isRequired,
+  answers: PropTypes.object.isRequired,
+  setAnswers: PropTypes.func.isRequired,
+  isSelected: PropTypes.bool.isRequired,
+};

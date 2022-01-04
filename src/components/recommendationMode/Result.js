@@ -34,7 +34,7 @@ import {
   RESERV,
   WORDCLOUD,
 } from "../Enum";
-
+import PropTypes from "prop-types";
 const Result = ({
   answers,
   data,
@@ -515,3 +515,24 @@ const Result = ({
 };
 
 export default Result;
+
+Result.propTypes = {
+  answers: PropTypes.object.isRequired,
+  data: PropTypes.array.isRequired,
+  house: PropTypes.object,
+  setHouse: PropTypes.func.isRequired,
+  setCurrentAddress: PropTypes.func.isRequired,
+  setIsHovered: PropTypes.func.isRequired,
+  setIsClicked: PropTypes.func.isRequired,
+  aggregated: PropTypes.array.isRequired,
+  isHovered: PropTypes.string.isRequired,
+  isClicked: PropTypes.string.isRequired,
+  isChecked: PropTypes.string.isRequired,
+  chartData: PropTypes.object.isRequired,
+  currentAddress: PropTypes.string.isRequired,
+  chartmode: PropTypes.string.isRequired,
+  setChartmode: PropTypes.func.isRequired,
+  setIsChecked: PropTypes.func.isRequired,
+  unitTransformer: PropTypes.func.isRequired,
+  positions: PropTypes.array.isRequired,
+};

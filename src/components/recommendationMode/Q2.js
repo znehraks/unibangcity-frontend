@@ -8,6 +8,7 @@ import {
   MainTitleContainer,
 } from "../styles/StyledComponents";
 import Q2Map from "../kakao/Q2Map";
+import PropTypes from "prop-types";
 const Q2Component = ({ answers, setAnswers, setMode }) => {
   return (
     <>
@@ -53,3 +54,8 @@ const Q2Component = ({ answers, setAnswers, setMode }) => {
 };
 
 export default Q2Component;
+Q2Component.propTypes = {
+  answers: PropTypes.object.isRequired,
+  setAnswers: PropTypes.func.isRequired,
+  setMode: PropTypes.func.isRequired,
+};

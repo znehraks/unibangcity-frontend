@@ -9,7 +9,7 @@ import {
   TextArticle,
   TextArticleSpan,
 } from "../styles/StyledComponents";
-
+import PropTypes from "prop-types";
 const Intro = ({ setMode }) => {
   return (
     <>
@@ -51,3 +51,7 @@ const Intro = ({ setMode }) => {
 };
 
 export default Intro;
+
+Intro.propTypes = {
+  setMode: PropTypes.func.isRequired,
+};

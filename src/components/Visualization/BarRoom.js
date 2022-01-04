@@ -42,18 +42,6 @@ const BarRoom = ({
   const options = {
     maintainAspectRatio: false,
     responsive: true,
-    scales: {
-      yAxes: [
-        {
-          scaleLabel: { display: true, labelString: "만원" },
-          ticks: {
-            min: 0, // 스케일에 대한 최솟갓 설정, 0 부터 시작
-            stepSize: 1, // 스케일에 대한 사용자 고정 정의 값
-          },
-        },
-      ],
-    },
-
     plugins: {
       legend: {
         position: "top",
@@ -65,7 +53,7 @@ const BarRoom = ({
     },
   };
 
-  const labels = [""];
+  const labels = [`${clickedMarker + 1}위 지역과 평균 비교`];
 
   const data = {
     labels,

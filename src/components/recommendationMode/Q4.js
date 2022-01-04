@@ -19,6 +19,7 @@ import cost_red_img from "../styles/images/cost_red.png";
 import safety_red_img from "../styles/images/safety_red.png";
 import house_red_img from "../styles/images/house_red.png";
 
+import PropTypes from "prop-types";
 const Q4Component = ({ answers, setAnswers, setMode }) => {
   return (
     <>
@@ -104,3 +105,9 @@ const Q4Component = ({ answers, setAnswers, setMode }) => {
 };
 
 export default Q4Component;
+
+Q4Component.propTypes = {
+  answers: PropTypes.object.isRequired,
+  setAnswers: PropTypes.func.isRequired,
+  setMode: PropTypes.func.isRequired,
+};

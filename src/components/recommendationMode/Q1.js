@@ -11,7 +11,7 @@ import {
   MainTitle,
   MainTitleContainer,
 } from "../styles/StyledComponents";
-
+import PropTypes from "prop-types";
 const Q1Component = ({
   schoolNameInputRef,
   schoolNameInput,
@@ -102,3 +102,11 @@ const Q1Component = ({
 };
 
 export default Q1Component;
+
+Q1Component.propTypes = {
+  schoolNameInputRef: PropTypes.object.isRequired,
+  schoolNameInput: PropTypes.object.isRequired,
+  setAnswers: PropTypes.func.isRequired,
+  answers: PropTypes.object.isRequired,
+  setMode: PropTypes.func.isRequired,
+};

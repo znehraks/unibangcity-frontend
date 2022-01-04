@@ -6,7 +6,7 @@ import {
   MainTitle,
   MainTitleContainer,
 } from "../styles/StyledComponents";
-
+import PropTypes from "prop-types";
 const Finish = ({ setMode }) => {
   return (
     <>
@@ -28,3 +28,7 @@ const Finish = ({ setMode }) => {
 };
 
 export default Finish;
+
+Finish.propTypes = {
+  setMode: PropTypes.func.isRequired,
+};

@@ -18,6 +18,7 @@ import subway_red_img from "../styles/images/subway_red.png";
 import cost_red_img from "../styles/images/cost_red.png";
 import safety_red_img from "../styles/images/safety_red.png";
 import house_red_img from "../styles/images/house_red.png";
+import PropTypes from "prop-types";
 const Q3Component = ({ answers, setAnswers, setMode }) => {
   return (
     <>
@@ -103,3 +104,9 @@ const Q3Component = ({ answers, setAnswers, setMode }) => {
 };
 
 export default Q3Component;
+
+Q3Component.propTypes = {
+  answers: PropTypes.object.isRequired,
+  setAnswers: PropTypes.func.isRequired,
+  setMode: PropTypes.func.isRequired,
+};
