@@ -290,6 +290,7 @@ const RecommendationContainer = () => {
     ) {
       console.log(answers);
       Api.getResidence(answers).then((res) => {
+        console.log(res.data);
         if (res.data.success) {
           let parsed = res.data.data.replaceAll("'", '"');
           parsed = JSON.parse(parsed);
@@ -317,7 +318,9 @@ const RecommendationContainer = () => {
               )},${Math.round(parsed[0].T3_avg)},${Math.round(
                 parsed[0].T4_avg
               )},${Math.round(parsed[0].T5_avg)}]`
-            );
+            ).then((res) => {
+              console.log(res.data);
+            });
           }
         } else {
           alert(res.data.err_msg);

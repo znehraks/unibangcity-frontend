@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 import styled, { keyframes } from "styled-components";
 import { MONTHPAY, MONTHRESERV, RESERV, RESULT } from "../Enum";
 
@@ -174,6 +174,16 @@ export const ButtonContainer = styled.div`
   align-items: center;
 `;
 export const ButtonBox = styled.div`
+  border: 1px solid rgba(0, 0, 0, 0.5);
+  padding: 0.8vw 1.2vw;
+  font-size: 1.2vw;
+  cursor: pointer;
+  :hover {
+    color: white;
+    background-color: black;
+  }
+`;
+export const ButtonBoxLink = styled(NavLink)`
   border: 1px solid rgba(0, 0, 0, 0.5);
   padding: 0.8vw 1.2vw;
   font-size: 1.2vw;

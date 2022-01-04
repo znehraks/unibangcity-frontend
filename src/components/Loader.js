@@ -13,6 +13,12 @@ export const LoaderComponent = styled.div`
   height: 80vh;
   text-align: center;
   z-index: 999;
+  color: ${(props) => props.theme.headerRed};
+  span {
+    margin-top: 1vw;
+    font-size: 1.2vw;
+    animation: ${TwinkleAnimation} 1.3s linear infinite;
+  }
   img {
     animation: ${TwinkleAnimation} 1.3s linear infinite;
   }
@@ -20,6 +26,8 @@ export const LoaderComponent = styled.div`
 const Loader = () => (
   <LoaderComponent>
     <img src={Logo_img} alt="로고"></img>
+    <span>잠시만 기다려주세요...</span>
+    <span>유니방시티가 열심히 자취방을 찾고있습니다.</span>
   </LoaderComponent>
 );
 
