@@ -24,6 +24,10 @@ export const LoaderComponent = styled.div`
   }
   @media (max-width: 550px) {
     font-size: 3vw;
+    img {
+      width: 30vw;
+      animation: ${TwinkleAnimation} 1.3s linear infinite;
+    }
   }
 `;
 const Loader = () => (

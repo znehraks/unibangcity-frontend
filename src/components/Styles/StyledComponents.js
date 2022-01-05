@@ -339,7 +339,7 @@ export const ResultArticleContainer = styled.div`
   padding-top: 2vw;
   border-bottom: 1px solid rgba(0, 0, 0, 0.5);
   @media (max-width: 550px) {
-    height: 130vh;
+    height: 150vh;
   }
 `;
 export const ResultTitleContainer = styled.div`
