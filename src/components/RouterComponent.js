@@ -14,7 +14,7 @@ const RouterComponent = () => {
       <Route exact path="/Recommendation" element={<Recommendation />} />
       <Route exact path="/Lab" element={<Lab />} />
       <Route exact path="/History" element={<History />} />
-      <Route exact path="*" element={<h1>NOT FOUND</h1>} />
+      <Route exact path="*" element={<Home />} />
     </Routes>
   );
 };
