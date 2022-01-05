@@ -11,6 +11,10 @@ const PieWrapper = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+  @media (max-width: 550px) {
+    height: 60vw;
+    margin-bottom: 7vh;
+  }
 `;
 
 const PieRoom = ({ isClicked, chartmode, setChartmode }) => {

@@ -27,7 +27,11 @@ const Q1Component = ({
           ex. '명지대학교'검색 시 '명지' 입력 후 아래에서 선택
         </MainSubTitleSpan>
       </MainTitleContainer>
-      <MainArticleContainer flexDirection="column" justifyContent="center">
+      <MainArticleContainer
+        mobileHeight={"20%"}
+        flexDirection="column"
+        justifyContent="center"
+      >
         <Input
           ref={schoolNameInputRef}
           autoFocus

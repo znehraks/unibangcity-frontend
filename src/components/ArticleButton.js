@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import styled from "styled-components";
-import { Q3, Q4, Q5 } from "./Enum";
+import { Q2, Q3, Q4, Q5 } from "./Enum";
 import PropTypes from "prop-types";
 const MainArticle = styled.div`
   width: 12vw;
@@ -19,6 +19,14 @@ const MainArticle = styled.div`
   :hover {
     border: 4px solid #f7323f;
     color: #f7323f;
+  }
+  img {
+    display: ${(props) => props.current === Q2 && "none"};
+  }
+  @media (max-width: 550px) {
+    font-size: 3vw;
+    width: 18vw;
+    height: 18vw;
   }
 `;
 const MainArticleButtonImg = styled.img`
@@ -48,10 +56,13 @@ const ArticleButton = ({
   }, [current, answers.Q3Answer, answers.Q4Answer, name]);
   return (
     <MainArticle
+      current={current}
       display={display}
       isSelected={isSelected}
       onClick={() => {
-        if (current === Q3) {
+        if (current === Q2) {
+          setAnswers({ ...answers, Q2Answer: name });
+        } else if (current === Q3) {
           setAnswers({ ...answers, Q3Answer: name, Q3Answer_kr: kr_name });
         } else if (current === Q4) {
           setAnswers({ ...answers, Q4Answer: name, Q4Answer_kr: kr_name });

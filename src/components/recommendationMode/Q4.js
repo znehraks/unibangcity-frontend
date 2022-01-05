@@ -27,7 +27,7 @@ const Q4Component = ({ answers, setAnswers, setMode }) => {
         <MainTitle>4. 두 번째로 중요시 여기는 요소를 선택해주세요.</MainTitle>
         <MainSubTitleSpan>아래 항목 중 한 개만 선택해 주세요.</MainSubTitleSpan>
       </MainTitleContainer>
-      <MainArticleContainer>
+      <MainArticleContainer mobileHeight={"20%"}>
         <ArticleButton
           current={Q4}
           name={DISTANCE}
@@ -71,7 +71,7 @@ const Q4Component = ({ answers, setAnswers, setMode }) => {
         <ArticleButton
           current={Q4}
           name={HOUSE}
-          kr_name={"주변 매물 수"}
+          kr_name={"매물 개수"}
           black_img={house_img}
           red_img={house_red_img}
           answers={answers}

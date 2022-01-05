@@ -34,6 +34,9 @@ export const HeaderLogoContainer = styled.div`
 export const HeaderLogo = styled.img`
   width: 30%;
   height: auto;
+  @media (max-width: 550px) {
+    width: 65%;
+  }
 `;
 export const HeaderMenuContainer = styled.div`
   flex: 2;
@@ -52,6 +55,9 @@ export const HeaderMenu = styled(Link)`
   cursor: pointer;
   :hover {
     color: white;
+  }
+  @media (max-width: 550px) {
+    font-size: 2.5vw;
   }
 `;
 
@@ -76,6 +82,9 @@ export const MainSubTitleLink = styled(Link)`
   align-items: center;
   animation: ${TwinkleAnimation} 1.5s linear infinite;
   cursor: pointer;
+  @media (max-width: 550px) {
+    font-size: 2.5vw;
+  }
 `;
 
 export const MainSubTitleSpan = styled.div`
@@ -87,6 +96,9 @@ export const MainSubTitleSpan = styled.div`
   justify-content: center;
   align-items: center;
   cursor: pointer;
+  @media (max-width: 550px) {
+    font-size: 2.5vw;
+  }
 `;
 
 export const TextArticle = styled.div`
@@ -96,9 +108,9 @@ export const TextArticle = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  span {
-    line-height: ${(props) =>
-      props.lineHeight ? `${props.lineHeight}` : `1.6vw`};
+  @media (max-width: 550px) {
+    width: ${(props) => (props.width ? `${props.width}` : `100%`)};
+    height: ${(props) => (props.height ? `${props.height}` : `100%`)};
   }
 `;
 export const TextArticleSpan = styled.span`
@@ -109,6 +121,14 @@ export const TextArticleSpan = styled.span`
   flex-direction: column;
   justify-content: center;
   align-items: flex-start;
+  line-height: ${(props) =>
+    props.lineHeight ? `${props.lineHeight}` : `1.6vw`};
+  @media (max-width: 550px) {
+    font-size: 3vw;
+    line-height: ${(props) =>
+      props.lineHeight ? `${props.lineHeight}` : `120%`};
+    height: 50%;
+  }
 `;
 
 //Recommendation
@@ -121,6 +141,9 @@ export const MainContainer = styled.div`
   align-items: center;
   background: white;
   position: relative;
+  @media (max-width: 550px) {
+    height: ${(props) => (props.mode === RESULT ? `auto` : `85%`)};
+  }
 `;
 export const SelectedContainer = styled.div`
   position: absolute;
@@ -132,17 +155,22 @@ export const SelectedContainer = styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: space-evenly;
+  @media (max-width: 550px) {
+  }
 `;
 export const SelectedSpan = styled.span`
   font-size: 1vw;
 `;
 export const MainTitleContainer = styled.div`
   width: 100%;
-  height: 30%;
+  height: 20%;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  @media (max-width: 550px) {
+    height: 20%;
+  }
 `;
 export const MainTitle = styled.div`
   width: 100%;
@@ -153,6 +181,9 @@ export const MainTitle = styled.div`
   justify-content: center;
   align-items: center;
   margin-bottom: 1vw;
+  @media (max-width: 550px) {
+    font-size: 3.5vw;
+  }
 `;
 export const MainArticleContainer = styled.div`
   width: 80%;
@@ -163,6 +194,11 @@ export const MainArticleContainer = styled.div`
   justify-content: ${(props) =>
     props.justifyContent ? `${props.justifyContent}` : `space-evenly`};
   align-items: center;
+  @media (max-width: 550px) {
+    width: ${(props) => (props.mobileWidth ? `${props.mobileWidth}` : `90%`)};
+    height: ${(props) =>
+      props.mobileHeight ? `${props.mobileHeight}` : `60%`};
+  }
 `;
 
 export const ButtonContainer = styled.div`
@@ -172,6 +208,10 @@ export const ButtonContainer = styled.div`
   flex-direction: row;
   justify-content: space-evenly;
   align-items: center;
+  @media (max-width: 550px) {
+    width: 40%;
+    height: 20%;
+  }
 `;
 export const ButtonBox = styled.div`
   border: 1px solid rgba(0, 0, 0, 0.5);
@@ -181,6 +221,10 @@ export const ButtonBox = styled.div`
   :hover {
     color: white;
     background-color: black;
+  }
+  @media (max-width: 550px) {
+    padding: 2vw 2vw;
+    font-size: 4vw;
   }
 `;
 export const ButtonBoxLink = styled(NavLink)`
@@ -192,6 +236,10 @@ export const ButtonBoxLink = styled(NavLink)`
     color: white;
     background-color: black;
   }
+  @media (max-width: 550px) {
+    padding: 2vw 2vw;
+    font-size: 4vw;
+  }
 `;
 export const Input = styled.input`
   font-size: 1.6vw;
@@ -201,6 +249,10 @@ export const Input = styled.input`
   :focus {
     outline: none;
     border-bottom: 2px solid ${(props) => props.theme.headerRed};
+  }
+  @media (max-width: 550px) {
+    width: 65%;
+    font-size: 5vw;
   }
 `;
 
@@ -212,6 +264,9 @@ export const HiddenSearchBox = styled.div`
   justify-content: flex-start;
   align-items: flex-start;
   overflow-y: scroll;
+  @media (max-width: 550px) {
+    width: 65%;
+  }
 `;
 export const HiddenSearchLine = styled.div`
   font-size: 1.2vw;
@@ -222,6 +277,10 @@ export const HiddenSearchLine = styled.div`
   cursor: pointer;
   :hover {
     color: ${(props) => props.theme.headerRed};
+  }
+  @media (max-width: 550px) {
+    font-size: 4vw;
+    height: 6vw;
   }
 `;
 export const MainArticle = styled.div`
@@ -241,6 +300,11 @@ export const MainArticle = styled.div`
     border: 4px solid #f7323f;
     color: #f7323f;
   }
+  @media (max-width: 550px) {
+    width: 40vw;
+    height: 40vw;
+    font-size: 5vw;
+  }
 `;
 export const MainArticleLink = styled(Link)`
   width: 12vw;
@@ -259,6 +323,11 @@ export const MainArticleLink = styled(Link)`
     border: 4px solid #f7323f;
     color: #f7323f;
   }
+  @media (max-width: 550px) {
+    width: 40vw;
+    height: 40vw;
+    font-size: 5vw;
+  }
 `;
 export const ResultArticleContainer = styled.div`
   width: 100%;
@@ -269,6 +338,9 @@ export const ResultArticleContainer = styled.div`
   align-items: center;
   padding-top: 2vw;
   border-bottom: 1px solid rgba(0, 0, 0, 0.5);
+  @media (max-width: 550px) {
+    height: 130vh;
+  }
 `;
 export const ResultTitleContainer = styled.div`
   width: 100%;
@@ -276,11 +348,19 @@ export const ResultTitleContainer = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: space-evenly;
+  @media (max-width: 550px) {
+    height: 20%;
+    align-items: center;
+  }
 `;
 export const ResultTitleSpan = styled.div`
   font-size: 2vw;
   margin-bottom: 0.6vw;
   text-align: center;
+  @media (max-width: 550px) {
+    font-size: 3.5vw;
+    margin: 3vw 0;
+  }
 `;
 export const ResultSubTitleSpan = styled.div`
   font-size: 1vw;
@@ -288,6 +368,10 @@ export const ResultSubTitleSpan = styled.div`
   text-align: center;
   strong {
     color: ${(props) => props.theme.headerRed};
+  }
+  @media (max-width: 550px) {
+    font-size: 2vw;
+    margin: 2vw 0;
   }
 `;
 
@@ -299,6 +383,10 @@ export const ResultMainContainer = styled.div`
   flex-direction: row;
   justify-content: center;
   align-items: center;
+  @media (max-width: 550px) {
+    height: 80%;
+    flex-direction: column;
+  }
 `;
 
 export const ResultSubContainer = styled.div`
@@ -308,6 +396,10 @@ export const ResultSubContainer = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  @media (max-width: 550px) {
+    width: 100%;
+    height: ${(props) => (props.mobileHeight ? props.mobileHeight : `100%`)};
+  }
 `;
 
 export const ResultDetailContainer = styled.div`
@@ -317,15 +409,22 @@ export const ResultDetailContainer = styled.div`
   flex-direction: row;
   justify-content: center;
   align-items: center;
+  @media (max-width: 550px) {
+    flex-direction: column;
+  }
 `;
 
 export const ResultDetailChartContainer = styled.div`
   width: 45%;
   height: 100%;
-  display: flex;
+  display: ${(props) => (props.mobile ? `none` : `flex`)};
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  @media (max-width: 550px) {
+    width: 100%;
+    height: 20%;
+  }
 `;
 
 export const ResultDetailContentContainer = styled.div`
@@ -336,6 +435,10 @@ export const ResultDetailContentContainer = styled.div`
   justify-content: center;
   align-items: center;
   font-size: 1.4vw;
+  @media (max-width: 550px) {
+    width: 100%;
+    height: 60%;
+  }
 `;
 export const ResultTable = styled.div`
   margin-top: 1vw;
@@ -355,6 +458,9 @@ export const ResultRow = styled.div`
   justify-content: center;
   align-items: center;
   font-size: 1.2vw;
+  @media (max-width: 550px) {
+    font-size: 2vw;
+  }
 `;
 export const ResultCell = styled.div`
   width: 100%;
@@ -380,6 +486,9 @@ export const ResultDetailSpan = styled.div`
   strong {
     color: ${(props) => props.theme.headerRed};
   }
+  @media (max-width: 550px) {
+    font-size: 2vw;
+  }
 `;
 
 export const ResultDetailImgContainer = styled.div`
@@ -389,8 +498,16 @@ export const ResultDetailImgContainer = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  @media (max-width: 550px) {
+    width: 100%;
+    height: 40%;
+  }
 `;
-export const ResultDetailImg = styled.img``;
+export const ResultDetailImg = styled.img`
+  @media (max-width: 550px) {
+    height: 100%;
+  }
+`;
 export const BarChartSelectContainer = styled.div`
   width: 60%;
   height: 2%;

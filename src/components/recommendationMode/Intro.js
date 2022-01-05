@@ -20,7 +20,11 @@ const Intro = ({ setMode }) => {
         </MainSubTitleSpan>
       </MainTitleContainer>
       <MainArticleContainer flexDirection={"column"}>
-        <TextArticle width={"35%"} height={"70%"} lineHeight="0.2vw">
+        <TextArticle
+          width={window.innerWidth <= 550 ? "80%" : "35%"}
+          height={"70%"}
+          lineHeight="0.2vw"
+        >
           <TextArticleSpan>1. 나의 학교 이름을 입력해 주세요.</TextArticleSpan>
           <TextArticleSpan>
             2. 원하는 최대 거리를 선택해 주세요.

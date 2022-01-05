@@ -22,6 +22,9 @@ export const LoaderComponent = styled.div`
   img {
     animation: ${TwinkleAnimation} 1.3s linear infinite;
   }
+  @media (max-width: 550px) {
+    font-size: 3vw;
+  }
 `;
 const Loader = () => (
   <LoaderComponent>

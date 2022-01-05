@@ -9,9 +9,10 @@ const Wrapper = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  @media (max-width: 500px) {
+  @media (max-width: 550px) {
     width: 100%;
-    height: 50vh;
+    height: 40vh;
+    margin-bottom: 5vw;
   }
 `;
 const TitleSpan = styled.span`

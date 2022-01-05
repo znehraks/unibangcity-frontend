@@ -53,7 +53,7 @@ const RecommendationPresenter = ({
         <title>Unibangcity | Recommendation</title>
       </Helmet>
       <MainContainer mode={mode}>
-        {mode !== RESULT && (
+        {mode !== RESULT && window.innerWidth > 550 && (
           <SelectedContainer>
             <SelectedSpan>{answers.Q1Answer}</SelectedSpan>+
             <SelectedSpan>

@@ -22,7 +22,6 @@ const MapContainer = ({ answers, univ_lat, univ_lon, setAnswers, mobile }) => {
     let drawingCircle; // 그려지고 있는 원을 표시할 원 객체입니다
     let drawingLine; // 그려지고 있는 원의 반지름을 표시할 선 객체입니다
     let drawingOverlay; // 그려지고 있는 원의 반경을 표시할 커스텀오버레이 입니다
-    let drawingDot; // 그려지고 있는 원의 중심점을 표시할 커스텀오버레이 입니다
 
     let circles = [];
 

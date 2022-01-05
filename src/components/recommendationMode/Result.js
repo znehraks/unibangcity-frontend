@@ -72,13 +72,13 @@ const Result = ({
               </ResultSubTitleSpan>
             </ResultTitleContainer>
             <ResultMainContainer>
-              <ResultSubContainer>
+              <ResultSubContainer mobileHeight={"50%"}>
                 <ResultSubTitleSpan>
                   마커를 클릭하면 해당 지역의 상세정보를 확인할 수 있습니다.
                 </ResultSubTitleSpan>
                 {data.length !== 0 && (
                   <Map
-                    mobile={window.innerWidth <= 500}
+                    mobile={window.innerWidth <= 550}
                     setHouse={setHouse}
                     setCurrentAddress={setCurrentAddress}
                     setIsHovered={setIsHovered}
@@ -89,13 +89,13 @@ const Result = ({
                   />
                 )}
               </ResultSubContainer>
-              <ResultSubContainer width={"40%"}>
+              <ResultSubContainer width={"40%"} mobileHeight={"30%"}>
                 <ResultSubTitleSpan>
                   선택된 지역과 5개 지역 평균의 차이입니다.
                 </ResultSubTitleSpan>
                 {aggregated.length !== 0 && (
                   <RadarArticle
-                    mobile={window.innerWidth <= 500}
+                    mobile={window.innerWidth <= 550}
                     data={aggregated}
                     isHovered={isHovered}
                     isClicked={isClicked}
@@ -205,7 +205,7 @@ const Result = ({
               )}
               {chartmode === BAR && (
                 <ResultDetailContainer>
-                  <ResultDetailChartContainer>
+                  <ResultDetailChartContainer mobile={window.innerWidth <= 550}>
                     <ResultSubTitleSpan>
                       {isClicked.rank}위 지역과 전체 평균 간{" "}
                       <strong>
@@ -264,7 +264,7 @@ const Result = ({
                   </ResultDetailChartContainer>
                   <ResultDetailContentContainer>
                     {isClicked.rank}위 지역의 통계
-                    <ResultTable>
+                    <ResultTable onClick={() => setChartmode(ALL)}>
                       <ResultRow>
                         <ResultCell></ResultCell>
                         <ResultCell>최고가</ResultCell>
@@ -499,7 +499,7 @@ const Result = ({
                           univ_lon={answers.univ_lon}
                           residencePositions={positions}
                           setHouse={setHouse}
-                          mobile={false}
+                          mobile={window.innerWidth <= 550}
                         />
                       </>
                     )}

@@ -8,6 +8,10 @@ const FooterWrapper = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  @media (max-width: 550px) {
+    height: 5%;
+    font-size: 2vw;
+  }
 `;
 
 const Footer = () => {

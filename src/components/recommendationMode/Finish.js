@@ -14,7 +14,7 @@ const Finish = ({ setMode }) => {
         <MainTitle>나만의 자취방을 보러가실 시간입니다.</MainTitle>
         <MainSubTitleSpan>아래 버튼을 눌러주세요.</MainSubTitleSpan>
       </MainTitleContainer>
-      <MainArticleContainer>
+      <MainArticleContainer mobileHeight={"20%"}>
         <MainArticle
           onClick={() => {
             setMode(RESULT);

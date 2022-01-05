@@ -17,6 +17,9 @@ const BarWrapper = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+  @media (max-width: 550px) {
+    height: 60vw;
+  }
 `;
 ChartJS.register(
   CategoryScale,
