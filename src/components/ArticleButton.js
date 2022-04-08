@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import styled from "styled-components";
 import { Q2, Q3, Q4, Q5 } from "./Enum";
 import PropTypes from "prop-types";
+import { useRecoilState } from "recoil";
+import { answersAtom } from "./recoil";
 const MainArticle = styled.div`
   width: 12vw;
   height: 12vw;
@@ -41,12 +43,11 @@ const ArticleButton = ({
   kr_name,
   black_img,
   red_img,
-  answers,
-  setAnswers,
   isSelected,
 }) => {
   const [buttonOnMouse, setButtonOnMouse] = useState(false);
   const [display, setDisplay] = useState(true);
+  const [answers, setAnswers] = useRecoilState(answersAtom);
   useEffect(() => {
     if (current === Q4) {
       setDisplay(answers.Q3Answer !== name);

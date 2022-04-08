@@ -13,8 +13,6 @@ import {
   chartDataAtom,
   positionsAtom,
 } from "../../components/recoil";
-import { useQuery } from "react-query";
-import axios from "axios";
 const { kakao } = window;
 
 const RecommendationContainer = () => {

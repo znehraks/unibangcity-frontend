@@ -1,5 +1,5 @@
 import ArticleButton from "../ArticleButton";
-import { COST, DISTANCE, HOUSE, Q2, Q3, Q4, SAFETY, SUBWAY } from "../Enum";
+import { Q2, Q3, Q4 } from "../Enum";
 import {
   ButtonBox,
   ButtonContainer,
@@ -8,21 +8,13 @@ import {
   MainTitle,
   MainTitleContainer,
 } from "../styles/StyledComponents";
-import distance_img from "../styles/images/distance.png";
-import subway_img from "../styles/images/subway.png";
-import cost_img from "../styles/images/cost.png";
-import safety_img from "../styles/images/safety.png";
-import house_img from "../styles/images/house.png";
-import distance_red_img from "../styles/images/distance_red.png";
-import subway_red_img from "../styles/images/subway_red.png";
-import cost_red_img from "../styles/images/cost_red.png";
-import safety_red_img from "../styles/images/safety_red.png";
-import house_red_img from "../styles/images/house_red.png";
 import { useRecoilState, useSetRecoilState } from "recoil";
 import { answersAtom, modeAtom } from "../recoil";
+import { ArticleButtonElements } from "../utils";
 const Q3Component = () => {
   const [answers, setAnswers] = useRecoilState(answersAtom);
   const setMode = useSetRecoilState(modeAtom);
+
   return (
     <>
       <MainTitleContainer>
@@ -30,56 +22,16 @@ const Q3Component = () => {
         <MainSubTitleSpan>아래 항목 중 한 개만 선택해 주세요.</MainSubTitleSpan>
       </MainTitleContainer>
       <MainArticleContainer mobileWidth={"100%"} mobileHeight={"20%"}>
-        <ArticleButton
-          current={Q3}
-          name={DISTANCE}
-          kr_name={"거리"}
-          black_img={distance_img}
-          red_img={distance_red_img}
-          answers={answers}
-          setAnswers={setAnswers}
-          isSelected={answers.Q3Answer === DISTANCE}
-        />
-        <ArticleButton
-          current={Q3}
-          name={SUBWAY}
-          kr_name={"역세권"}
-          black_img={subway_img}
-          red_img={subway_red_img}
-          answers={answers}
-          setAnswers={setAnswers}
-          isSelected={answers.Q3Answer === SUBWAY}
-        />
-        <ArticleButton
-          current={Q3}
-          name={COST}
-          kr_name={"가성비"}
-          black_img={cost_img}
-          red_img={cost_red_img}
-          answers={answers}
-          setAnswers={setAnswers}
-          isSelected={answers.Q3Answer === COST}
-        />
-        <ArticleButton
-          current={Q3}
-          name={SAFETY}
-          kr_name={"안전"}
-          black_img={safety_img}
-          red_img={safety_red_img}
-          answers={answers}
-          setAnswers={setAnswers}
-          isSelected={answers.Q3Answer === SAFETY}
-        />
-        <ArticleButton
-          current={Q3}
-          name={HOUSE}
-          kr_name={"매물 개수"}
-          black_img={house_img}
-          red_img={house_red_img}
-          answers={answers}
-          setAnswers={setAnswers}
-          isSelected={answers.Q3Answer === HOUSE}
-        />
+        {ArticleButtonElements(answers).map((elem) => (
+          <ArticleButton
+            current={Q3}
+            name={elem.name}
+            kr_name={elem.kr_name}
+            black_img={elem.black_img}
+            red_img={elem.red_img}
+            isSelected={answers.Q3Answer === elem.name}
+          />
+        ))}
       </MainArticleContainer>
       <ButtonContainer>
         <ButtonBox

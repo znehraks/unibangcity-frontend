@@ -2,7 +2,7 @@ import React from "react";
 import { useRecoilValue } from "recoil";
 import styled from "styled-components";
 import { aggregatedAtom, isClickedAtom, isHoveredAtom } from "../recoil";
-import StarChart02 from "./StarChart02";
+import StarChart02 from "./RadarChart";
 
 const Wrapper = styled.div`
   width: 80%;
