@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import ReactWordCloud from "react-wordcloud";
+import { useRecoilValue } from "recoil";
 import styled from "styled-components";
+import { chartDataAtom, isClickedAtom, mobileAtom } from "../recoil";
 
 const Wrapper = styled.div`
   height: 25vw;
@@ -11,7 +13,11 @@ const Wrapper = styled.div`
     height: 60vw;
   }
 `;
-const Wordcloud = ({ chartMode, hashtags, mobile }) => {
+const Wordcloud = () => {
+  const chartData = useRecoilValue(chartDataAtom);
+  const isClicked = useRecoilValue(isClickedAtom);
+  const hashtags = chartData.hashtagsEach[isClicked.rank - 1];
+  const mobile = useRecoilValue(mobileAtom);
   const [hashtagsDict, setHashtagsDict] = useState([]);
   const hashCount = () => {
     const count = {};

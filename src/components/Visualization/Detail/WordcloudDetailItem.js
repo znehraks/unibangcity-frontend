@@ -1,6 +1,8 @@
 import React from "react";
+import { useRecoilState, useRecoilValue } from "recoil";
 import styled from "styled-components";
 import { ALL, WORDCLOUD } from "../../Enum";
+import { chartmodeAtom, mobileAtom } from "../../recoil";
 import Wordcloud from "../Wordcloud";
 
 const DetailItem = styled.div`
@@ -11,8 +13,10 @@ const DetailItem = styled.div`
   align-items: center;
 `;
 
-const Detail = ({ hashtags, chartmode, setChartmode, mobile }) => {
+const Detail = ({ hashtags }) => {
+  const mobile = useRecoilValue(mobileAtom);
   console.log(hashtags);
+  const [chartmode, setChartmode] = useRecoilState(chartmodeAtom);
   return (
     <>
       <DetailItem

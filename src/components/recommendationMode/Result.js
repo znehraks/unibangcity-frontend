@@ -34,27 +34,32 @@ import {
   RESERV,
   WORDCLOUD,
 } from "../Enum";
-import PropTypes from "prop-types";
-const Result = ({
-  answers,
-  data,
-  house,
-  setHouse,
-  setCurrentAddress,
-  setIsHovered,
-  setIsClicked,
-  aggregated,
-  isHovered,
-  isClicked,
-  isChecked,
-  chartData,
-  currentAddress,
-  chartmode,
-  setChartmode,
-  setIsChecked,
-  unitTransformer,
-  positions,
-}) => {
+import { useRecoilState, useRecoilValue } from "recoil";
+import {
+  aggregatedAtom,
+  answersAtom,
+  dataAtom,
+  currentAddressAtom,
+  houseAtom,
+  isClickedAtom,
+  chartDataAtom,
+  isCheckedAtom,
+  chartmodeAtom,
+  positionsAtom,
+} from "../../components/recoil";
+import { unitTransformer } from "../utils";
+const Result = () => {
+  const answers = useRecoilValue(answersAtom);
+  const data = useRecoilValue(dataAtom);
+  const aggregated = useRecoilValue(aggregatedAtom);
+  const positions = useRecoilValue(positionsAtom);
+  const chartData = useRecoilValue(chartDataAtom);
+  const currentAddress = useRecoilValue(currentAddressAtom);
+  const [house, setHouse] = useRecoilState(houseAtom);
+  const isClicked = useRecoilValue(isClickedAtom);
+  const [isChecked, setIsChecked] = useRecoilState(isCheckedAtom);
+  const [chartmode, setChartmode] = useRecoilState(chartmodeAtom);
+
   return (
     <>
       {data.length === 0 ? (
@@ -76,35 +81,17 @@ const Result = ({
                 <ResultSubTitleSpan>
                   마커를 클릭하면 해당 지역의 상세정보를 확인할 수 있습니다.
                 </ResultSubTitleSpan>
-                {data.length !== 0 && (
-                  <Map
-                    mobile={window.innerWidth <= 550}
-                    setHouse={setHouse}
-                    setCurrentAddress={setCurrentAddress}
-                    setIsHovered={setIsHovered}
-                    setIsClicked={setIsClicked}
-                    data={data}
-                    univ_lat={answers.univ_lat}
-                    univ_lon={answers.univ_lon}
-                  />
-                )}
+                {data.length !== 0 && <Map />}
               </ResultSubContainer>
               <ResultSubContainer width={"40%"} mobileHeight={"30%"}>
                 <ResultSubTitleSpan>
                   선택된 지역과 5개 지역 평균의 차이입니다.
                 </ResultSubTitleSpan>
-                {aggregated.length !== 0 && (
-                  <RadarArticle
-                    mobile={window.innerWidth <= 550}
-                    data={aggregated}
-                    isHovered={isHovered}
-                    isClicked={isClicked}
-                  />
-                )}
+                {aggregated.length !== 0 && <RadarArticle />}
               </ResultSubContainer>
             </ResultMainContainer>
           </ResultArticleContainer>
-          {isClicked && chartData.hashtagsTotal.length !== 0 && (
+          {isClicked.rank !== 0 && chartData.hashtagsTotal.length !== 0 && (
             <ResultArticleContainer>
               <ResultTitleContainer>
                 <ResultTitleSpan>
@@ -153,30 +140,7 @@ const Result = ({
                       </BarChartSelect>
                     </BarChartSelectContainer>
 
-                    <BarComponent
-                      isChecked={isChecked}
-                      chartmode={chartmode}
-                      setChartmode={setChartmode}
-                      monthlyDepositEachAggregated={
-                        chartData.monthlyDepositEachAggregated
-                      }
-                      monthlyPayEachAggregated={
-                        chartData.monthlyPayEachAggregated
-                      }
-                      reservDepositEachAggregated={
-                        chartData.reservDepositEachAggregated
-                      }
-                      monthlyDepositTotalAggregated={
-                        chartData.monthlyDepositTotalAggregated
-                      }
-                      monthlyPayTotalAggregated={
-                        chartData.monthlyPayTotalAggregated
-                      }
-                      reservDepositTotalAggregated={
-                        chartData.reservDepositTotalAggregated
-                      }
-                      clickedMarker={isClicked.rank - 1}
-                    />
+                    <BarComponent clickedMarker={isClicked.rank - 1} />
                   </ResultSubContainer>
                   <ResultSubContainer>
                     <ResultSubTitleSpan>
@@ -184,10 +148,7 @@ const Result = ({
                     </ResultSubTitleSpan>
                     <BarChartSelectContainer></BarChartSelectContainer>
                     <WordcloudDetailItem
-                      mobile={window.innerWidth <= 500}
                       hashtags={chartData.hashtagsEach[isClicked.rank - 1]}
-                      chartmode={chartmode}
-                      setChartmode={setChartmode}
                     />
                   </ResultSubContainer>
                   <ResultSubContainer>
@@ -195,17 +156,13 @@ const Result = ({
                       {isClicked.rank}위 지역의 매물 종류 분포
                     </ResultSubTitleSpan>
                     <BarChartSelectContainer></BarChartSelectContainer>
-                    <PieComponent
-                      isClicked={isClicked}
-                      chartmode={chartmode}
-                      setChartmode={setChartmode}
-                    />
+                    <PieComponent />
                   </ResultSubContainer>
                 </ResultMainContainer>
               )}
               {chartmode === BAR && (
                 <ResultDetailContainer>
-                  <ResultDetailChartContainer mobile={window.innerWidth <= 550}>
+                  <ResultDetailChartContainer>
                     <ResultSubTitleSpan>
                       {isClicked.rank}위 지역과 전체 평균 간{" "}
                       <strong>
@@ -237,30 +194,7 @@ const Result = ({
                         전세
                       </BarChartSelect>
                     </BarChartSelectContainer>
-                    <BarComponent
-                      isChecked={isChecked}
-                      chartmode={chartmode}
-                      setChartmode={setChartmode}
-                      monthlyDepositEachAggregated={
-                        chartData.monthlyDepositEachAggregated
-                      }
-                      monthlyPayEachAggregated={
-                        chartData.monthlyPayEachAggregated
-                      }
-                      reservDepositEachAggregated={
-                        chartData.reservDepositEachAggregated
-                      }
-                      monthlyDepositTotalAggregated={
-                        chartData.monthlyDepositTotalAggregated
-                      }
-                      monthlyPayTotalAggregated={
-                        chartData.monthlyPayTotalAggregated
-                      }
-                      reservDepositTotalAggregated={
-                        chartData.reservDepositTotalAggregated
-                      }
-                      clickedMarker={isClicked.rank - 1}
-                    />
+                    <BarComponent clickedMarker={isClicked.rank - 1} />
                   </ResultDetailChartContainer>
                   <ResultDetailContentContainer>
                     {isClicked.rank}위 지역의 통계
@@ -444,12 +378,7 @@ const Result = ({
                       {isClicked.rank}위 지역의 핵심 키워드
                     </ResultSubTitleSpan>
                     <BarChartSelectContainer></BarChartSelectContainer>
-                    <WordcloudDetailItem
-                      mobile={window.innerWidth <= 500}
-                      hashtags={chartData.hashtagsEach[isClicked.rank - 1]}
-                      chartmode={chartmode}
-                      setChartmode={setChartmode}
-                    />
+                    <WordcloudDetailItem />
                   </ResultDetailChartContainer>
                 </ResultDetailContainer>
               )}
@@ -480,11 +409,7 @@ const Result = ({
                       <ResultSubTitleSpan>
                         {isClicked.rank}위 지역의 매물 종류 분포
                       </ResultSubTitleSpan>
-                      <PieComponent
-                        isClicked={isClicked}
-                        chartmode={chartmode}
-                        setChartmode={setChartmode}
-                      />
+                      <PieComponent />
                     </ResultDetailChartContainer>
                   )}
                   <ResultDetailContentContainer>
@@ -493,14 +418,7 @@ const Result = ({
                         <ResultSubTitleSpan>
                           {isClicked.rank}위 지역의 매물 분포도
                         </ResultSubTitleSpan>
-                        <Map2
-                          isClicked={isClicked}
-                          univ_lat={answers.univ_lat}
-                          univ_lon={answers.univ_lon}
-                          residencePositions={positions}
-                          setHouse={setHouse}
-                          mobile={window.innerWidth <= 550}
-                        />
+                        <Map2 />
                       </>
                     )}
                   </ResultDetailContentContainer>
@@ -515,24 +433,3 @@ const Result = ({
 };
 
 export default Result;
-
-Result.propTypes = {
-  answers: PropTypes.object.isRequired,
-  data: PropTypes.array.isRequired,
-  house: PropTypes.object,
-  setHouse: PropTypes.func.isRequired,
-  setCurrentAddress: PropTypes.func.isRequired,
-  setIsHovered: PropTypes.func.isRequired,
-  setIsClicked: PropTypes.func.isRequired,
-  aggregated: PropTypes.array.isRequired,
-  isHovered: PropTypes.string.isRequired,
-  isClicked: PropTypes.string.isRequired,
-  isChecked: PropTypes.string.isRequired,
-  chartData: PropTypes.object.isRequired,
-  currentAddress: PropTypes.string.isRequired,
-  chartmode: PropTypes.string.isRequired,
-  setChartmode: PropTypes.func.isRequired,
-  setIsChecked: PropTypes.func.isRequired,
-  unitTransformer: PropTypes.func.isRequired,
-  positions: PropTypes.array.isRequired,
-};

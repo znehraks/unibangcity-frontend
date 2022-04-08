@@ -3,6 +3,8 @@ import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
 import { Pie } from "react-chartjs-2";
 import styled from "styled-components";
 import { ALL, PIE } from "../Enum";
+import { useRecoilState, useRecoilValue } from "recoil";
+import { chartmodeAtom, isClickedAtom } from "../recoil";
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 const PieWrapper = styled.div`
@@ -17,7 +19,9 @@ const PieWrapper = styled.div`
   }
 `;
 
-const PieRoom = ({ isClicked, chartmode, setChartmode }) => {
+const PieRoom = () => {
+  const isClicked = useRecoilValue(isClickedAtom);
+  const [chartmode, setChartmode] = useRecoilState(chartmodeAtom);
   const [pieData, setPieData] = useState({ labels: [], data: [] });
   const getAggregatedRoom = () => {
     const count = {};

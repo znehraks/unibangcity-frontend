@@ -1,7 +1,12 @@
 import React, { useEffect } from "react";
+import { useRecoilState, useRecoilValue } from "recoil";
+import { answersAtom, mobileAtom } from "../recoil";
 const { kakao } = window;
 
-const MapContainer = ({ answers, univ_lat, univ_lon, setAnswers, mobile }) => {
+const MapContainer = () => {
+  const { univ_lat, univ_lon } = useRecoilValue(answersAtom);
+  const mobile = useRecoilValue(mobileAtom);
+  const [answers, setAnswers] = useRecoilState(answersAtom);
   useEffect(() => {
     //지도 넣을 컨테이너
     const container = document.getElementById("myMap");

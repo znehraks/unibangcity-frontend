@@ -11,14 +11,15 @@ import {
   MainTitle,
   MainTitleContainer,
 } from "../styles/StyledComponents";
-import PropTypes from "prop-types";
-const Q1Component = ({
-  schoolNameInputRef,
-  schoolNameInput,
-  setAnswers,
-  answers,
-  setMode,
-}) => {
+import { useRecoilState, useSetRecoilState } from "recoil";
+import { answersAtom, modeAtom } from "../recoil";
+import useInput from "../hooks/useInput";
+import { useRef } from "react";
+const Q1Component = () => {
+  const schoolNameInput = useInput("");
+  const schoolNameInputRef = useRef();
+  const [answers, setAnswers] = useRecoilState(answersAtom);
+  const setMode = useSetRecoilState(modeAtom);
   return (
     <>
       <MainTitleContainer>
@@ -106,11 +107,3 @@ const Q1Component = ({
 };
 
 export default Q1Component;
-
-Q1Component.propTypes = {
-  schoolNameInputRef: PropTypes.object.isRequired,
-  schoolNameInput: PropTypes.object.isRequired,
-  setAnswers: PropTypes.func.isRequired,
-  answers: PropTypes.object.isRequired,
-  setMode: PropTypes.func.isRequired,
-};

@@ -9,8 +9,10 @@ import {
   TextArticle,
   TextArticleSpan,
 } from "../styles/StyledComponents";
-import PropTypes from "prop-types";
-const Intro = ({ setMode }) => {
+import { useSetRecoilState } from "recoil";
+import { modeAtom } from "../recoil";
+const Intro = () => {
+  const setMode = useSetRecoilState(modeAtom);
   return (
     <>
       <MainTitleContainer>
@@ -55,7 +57,3 @@ const Intro = ({ setMode }) => {
 };
 
 export default Intro;
-
-Intro.propTypes = {
-  setMode: PropTypes.func.isRequired,
-};

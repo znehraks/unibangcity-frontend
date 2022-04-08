@@ -6,8 +6,10 @@ import {
   MainTitle,
   MainTitleContainer,
 } from "../styles/StyledComponents";
-import PropTypes from "prop-types";
-const Finish = ({ setMode }) => {
+import { useSetRecoilState } from "recoil";
+import { modeAtom } from "../recoil";
+const Finish = () => {
+  const setMode = useSetRecoilState(modeAtom);
   return (
     <>
       <MainTitleContainer>
@@ -28,7 +30,3 @@ const Finish = ({ setMode }) => {
 };
 
 export default Finish;
-
-Finish.propTypes = {
-  setMode: PropTypes.func.isRequired,
-};

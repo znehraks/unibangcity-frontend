@@ -11,6 +11,8 @@ import {
 import { Bar } from "react-chartjs-2";
 import styled from "styled-components";
 import { ALL, BAR, MONTHPAY, MONTHRESERV } from "../Enum";
+import { useRecoilState, useRecoilValue } from "recoil";
+import { chartDataAtom, chartmodeAtom, isCheckedAtom } from "../recoil";
 const BarWrapper = styled.div`
   width: 60%;
   height: 25vw;
@@ -30,18 +32,17 @@ ChartJS.register(
   Legend
 );
 
-const BarRoom = ({
-  isChecked,
-  chartmode,
-  setChartmode,
-  monthlyDepositEachAggregated,
-  monthlyPayEachAggregated,
-  reservDepositEachAggregated,
-  monthlyDepositTotalAggregated,
-  monthlyPayTotalAggregated,
-  reservDepositTotalAggregated,
-  clickedMarker,
-}) => {
+const BarRoom = ({ clickedMarker }) => {
+  const isChecked = useRecoilValue(isCheckedAtom);
+  const [chartmode, setChartmode] = useRecoilState(chartmodeAtom);
+  const {
+    monthlyDepositEachAggregated,
+    monthlyPayEachAggregated,
+    reservDepositEachAggregated,
+    monthlyDepositTotalAggregated,
+    monthlyPayTotalAggregated,
+    reservDepositTotalAggregated,
+  } = useRecoilValue(chartDataAtom);
   const options = {
     maintainAspectRatio: false,
     responsive: true,

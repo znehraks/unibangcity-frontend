@@ -1,15 +1,21 @@
 import React, { useEffect } from "react";
+import { useRecoilValue, useSetRecoilState } from "recoil";
+import {
+  answersAtom,
+  houseAtom,
+  isClickedAtom,
+  mobileAtom,
+  positionsAtom,
+} from "../recoil";
 import clickedMarker from "../styles/images/selectedMarker.png";
 const { kakao } = window;
 
-const MapContainer = ({
-  isClicked,
-  univ_lat,
-  univ_lon,
-  residencePositions,
-  setHouse,
-  mobile,
-}) => {
+const MapContainer = () => {
+  const { univ_lat, univ_lon } = useRecoilValue(answersAtom);
+  const mobile = useRecoilValue(mobileAtom);
+  const isClicked = useRecoilValue(isClickedAtom);
+  const setHouse = useSetRecoilState(houseAtom);
+  const residencePositions = useRecoilValue(positionsAtom);
   useEffect(() => {
     console.log(univ_lat, univ_lon, residencePositions);
     //지도 넣을 컨테이너
@@ -30,24 +36,6 @@ const MapContainer = ({
     const imageSize = new kakao.maps.Size(64, 69);
     const imageOption = { offset: new kakao.maps.Point(30, 60) };
 
-    //마커 정보 담은 객체 생성
-    // let residencePositions = [
-    //   {
-    //     latlng: new kakao.maps.LatLng(data[0].lat, data[0].lon),
-    //   },
-    //   {
-    //     latlng: new kakao.maps.LatLng(data[1].lat, data[1].lon),
-    //   },
-    //   {
-    //     latlng: new kakao.maps.LatLng(data[2].lat, data[2].lon),
-    //   },
-    //   {
-    //     latlng: new kakao.maps.LatLng(data[3].lat, data[3].lon),
-    //   },
-    //   {
-    //     latlng: new kakao.maps.LatLng(data[4].lat, data[4].lon),
-    //   },
-    // ];
     let selectedMarker = null;
 
     // MakrerImage 객체를 생성하여 반환하는 함수입니다
@@ -122,24 +110,6 @@ const MapContainer = ({
       }
     };
     createMarkers();
-    // var marker = new kakao.maps.Marker({
-    //   map: map, // 마커를 표시할 지도
-    //   position: residencePositions[i].latlng,
-    //   image: residencePositions[i].image, // 마커의 위치
-    // });
-
-    // const marker01 = new kakao.maps.Marker({
-    //   map: map,
-    //   position: new kakao.maps.LatLng(data[0].lat, data[0].lon),
-    // });
-    // const marker02 = new kakao.maps.Marker({
-    //   map: map,
-    //   position: new kakao.maps.LatLng(data[1].lat, data[1].lon),
-    // });
-    // const marker03 = new kakao.maps.Marker({
-    //   map: map,
-    //   position: new kakao.maps.LatLng(data[2].lat, data[2].lon),
-    // });
   }, [isClicked, univ_lat, univ_lon, residencePositions]);
 
   return (

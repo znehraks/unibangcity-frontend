@@ -1,5 +1,7 @@
 import React from "react";
+import { useRecoilValue } from "recoil";
 import styled from "styled-components";
+import { aggregatedAtom, isClickedAtom, isHoveredAtom } from "../recoil";
 import StarChart02 from "./StarChart02";
 
 const Wrapper = styled.div`
@@ -20,20 +22,15 @@ const TitleSpan = styled.span`
   margin-top: 2vw;
   margin-bottom: 1vw;
 `;
-const RadarArticle = ({ isHovered, data, isClicked, mobile }) => {
-  console.log(isHovered);
-  console.log(data);
-  console.log(isClicked);
+const RadarArticle = () => {
+  const isHovered = useRecoilValue(isHoveredAtom);
+  const aggregated = useRecoilValue(aggregatedAtom);
+  const isClicked = useRecoilValue(isClickedAtom);
   return (
     <>
-      {(isHovered || isClicked) && data ? (
+      {(isHovered.rank !== 0 || isClicked !== 0) && aggregated.length !== 0 ? (
         <Wrapper>
-          <StarChart02
-            mobile={mobile}
-            data={data}
-            isHovered={isHovered}
-            isClicked={isClicked}
-          />
+          <StarChart02 />
         </Wrapper>
       ) : (
         <Wrapper>

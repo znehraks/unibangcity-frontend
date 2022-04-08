@@ -9,18 +9,26 @@ import second_h from "../styles/images/2nd_hover.png";
 import third_h from "../styles/images/3rd_hover.png";
 import fourth_h from "../styles/images/4th_hover.png";
 import fifth_h from "../styles/images/5th_hover.png";
+import { useRecoilValue, useSetRecoilState } from "recoil";
+import {
+  answersAtom,
+  currentAddressAtom,
+  dataAtom,
+  houseAtom,
+  isClickedAtom,
+  isHoveredAtom,
+  mobileAtom,
+} from "../recoil";
 const { kakao } = window;
 
-const MapContainer = ({
-  setHouse,
-  data,
-  setIsClicked,
-  setIsHovered,
-  univ_lat,
-  univ_lon,
-  setCurrentAddress,
-  mobile,
-}) => {
+const MapContainer = () => {
+  const { univ_lat, univ_lon } = useRecoilValue(answersAtom);
+  const mobile = useRecoilValue(mobileAtom);
+  const setHouse = useSetRecoilState(houseAtom);
+  const data = useRecoilValue(dataAtom);
+  const setIsClicked = useSetRecoilState(isClickedAtom);
+  const setIsHovered = useSetRecoilState(isHoveredAtom);
+  const setCurrentAddress = useSetRecoilState(currentAddressAtom);
   useEffect(() => {
     //지도 넣을 컨테이너
     const container = document.getElementById("myMap1");

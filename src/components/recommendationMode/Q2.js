@@ -8,9 +8,12 @@ import {
   MainTitleContainer,
 } from "../styles/StyledComponents";
 import Q2Map from "../kakao/Q2Map";
-import PropTypes from "prop-types";
 import ArticleButton from "../ArticleButton";
-const Q2Component = ({ answers, setAnswers, setMode }) => {
+import { useRecoilState, useSetRecoilState } from "recoil";
+import { answersAtom, modeAtom } from "../recoil";
+const Q2Component = () => {
+  const [answers, setAnswers] = useRecoilState(answersAtom);
+  const setMode = useSetRecoilState(modeAtom);
   return (
     <>
       <MainTitleContainer>
@@ -94,8 +97,3 @@ const Q2Component = ({ answers, setAnswers, setMode }) => {
 };
 
 export default Q2Component;
-Q2Component.propTypes = {
-  answers: PropTypes.object.isRequired,
-  setAnswers: PropTypes.func.isRequired,
-  setMode: PropTypes.func.isRequired,
-};

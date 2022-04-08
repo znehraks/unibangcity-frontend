@@ -1,45 +1,31 @@
-import React, { useEffect, useRef, useState } from "react";
-import { FINISH, INTRO, ALL, MONTHRESERV } from "../../components/Enum";
-import useInput from "../../components/hooks/useInput";
+import React, { useEffect } from "react";
+import { FINISH } from "../../components/Enum";
 import { Api } from "../../api";
 import RecommendationPresenter from "./RecommendationPresenter";
+import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
+import {
+  aggregatedAtom,
+  answersAtom,
+  dataAtom,
+  modeAtom,
+  isClickedAtom,
+  isHoveredAtom,
+  chartDataAtom,
+  positionsAtom,
+} from "../../components/recoil";
+import { useQuery } from "react-query";
+import axios from "axios";
 const { kakao } = window;
 
 const RecommendationContainer = () => {
-  const [mode, setMode] = useState(INTRO);
-  const schoolNameInput = useInput("");
-  const schoolNameInputRef = useRef();
-  const [answers, setAnswers] = useState({
-    Q1Answer: "",
-    univ_lat: "",
-    univ_lon: "",
-    Q2Answer: "",
-    Q3Answer: "",
-    Q4Answer: "",
-    Q5Answer: "",
-    Q3Answer_kr: "",
-    Q4Answer_kr: "",
-    Q5Answer_kr: "",
-  });
-  const [data, setData] = useState([]);
-  const [aggregated, setAggregated] = useState([]);
-  const [currentAddress, setCurrentAddress] = useState("");
-  const [house, setHouse] = useState();
-  const [isClicked, setIsClicked] = useState("");
-  const [isHovered, setIsHovered] = useState("");
-  const [chartData, setChartData] = useState({
-    hashtagsEach: [],
-    monthlyDepositEachAggregated: {},
-    monthlyPayEachAggregated: {},
-    reservDepositEachAggregated: {},
-    hashtagsTotal: [],
-    monthlyDepositTotalAggregated: {},
-    monthlyPayTotalAggregated: {},
-    reservDepositTotalAggregated: {},
-  });
-  const [isChecked, setIsChecked] = useState(MONTHRESERV);
-  const [chartmode, setChartmode] = useState(ALL);
-  const [positions, setPositions] = useState([]);
+  const [mode, setMode] = useRecoilState(modeAtom);
+  const answers = useRecoilValue(answersAtom);
+  const [data, setData] = useRecoilState(dataAtom);
+  const [aggregated, setAggregated] = useRecoilState(aggregatedAtom);
+  const isClicked = useRecoilValue(isClickedAtom);
+  const isHovered = useRecoilValue(isHoveredAtom);
+  const [chartData, setChartData] = useRecoilState(chartDataAtom);
+  const setPositions = useSetRecoilState(positionsAtom);
 
   const getAggregated = () => {
     //마커 레이더차트
@@ -254,14 +240,6 @@ const RecommendationContainer = () => {
     console.log(chartData);
   };
 
-  const unitTransformer = (value) => {
-    return value >= 10000
-      ? `${Math.floor(value / 10000)}억 ${
-          value % 10000 === 0 ? "(원)" : `${value % 10000}(만 원)`
-        }`
-      : `${value}(만 원)`;
-  };
-
   const getPositions = () => {
     console.log(isClicked.rooms_location_lat);
     if (isClicked) {
@@ -339,31 +317,7 @@ const RecommendationContainer = () => {
     console.log(isClicked);
   }, [mode, isHovered, isClicked]);
   return (
-    <RecommendationPresenter
-      mode={mode}
-      answers={answers}
-      setMode={setMode}
-      setAnswers={setAnswers}
-      schoolNameInputRef={schoolNameInputRef}
-      schoolNameInput={schoolNameInput}
-      data={data}
-      house={house}
-      setHouse={setHouse}
-      setCurrentAddress={setCurrentAddress}
-      setIsHovered={setIsHovered}
-      setIsClicked={setIsClicked}
-      aggregated={aggregated}
-      isHovered={isHovered}
-      isClicked={isClicked}
-      isChecked={isChecked}
-      chartData={chartData}
-      currentAddress={currentAddress}
-      chartmode={chartmode}
-      setChartmode={setChartmode}
-      setIsChecked={setIsChecked}
-      unitTransformer={unitTransformer}
-      positions={positions}
-    />
+    <RecommendationPresenter mode={mode} answers={answers} setMode={setMode} />
   );
 };
 export default RecommendationContainer;
